@@ -5,5 +5,7 @@ plotly
 pandas_ta
 backtesting
 yfinance
+rq
+redis
 
 Flask

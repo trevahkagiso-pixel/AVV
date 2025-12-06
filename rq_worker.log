@@ -1,0 +1,7 @@
+Starting RQ worker on redis://localhost:6379/0 queue=default
+14:44:02 Worker 30cb8a2bada4489a81389b33c4f8ebf2: started with PID 71372, version 2.6.1
+14:44:02 Worker 30cb8a2bada4489a81389b33c4f8ebf2: subscribing to channel rq:pubsub:30cb8a2bada4489a81389b33c4f8ebf2
+14:44:02 *** Listening on default...
+14:44:02 Worker 30cb8a2bada4489a81389b33c4f8ebf2: cleaning registries for queue: default
+14:57:32 Worker 30cb8a2bada4489a81389b33c4f8ebf2: cleaning registries for queue: default
+15:11:02 Worker 30cb8a2bada4489a81389b33c4f8ebf2: cleaning registries for queue: default
