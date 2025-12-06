@@ -348,6 +348,115 @@ def get_base_css():
         .success-box {
             background: #4caf50;
             color: white;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 2% auto;
+            padding: 0;
+            width: 95%;
+            height: 90%;
+            border-radius: 12px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+        
+        .close-btn {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0 10px;
+        }
+        
+        .close-btn:hover {
+            transform: scale(1.2);
+        }
+        
+        .modal-body {
+            flex: 1;
+            overflow: auto;
+            padding: 20px;
+        }
+        
+        .modal-body iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 8px;
+        }
+        
+        /* Clickable chart styling */
+        .equity-card.clickable {
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .equity-card.clickable:hover {
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.25);
+        }
+        
+        .equity-card.clickable::after {
+            content: "🔍 Click to expand";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .equity-card.clickable:hover::after {
+            opacity: 1;
+        }
             padding: 20px;
             border-radius: 8px;
             margin: 20px 0;
@@ -686,15 +795,60 @@ def pair_details(pair: str):
 
     for chart_label, chart_file in charts:
         html += f"""
-        <div class='equity-card'>
+        <div class='equity-card clickable' onclick="openModal('{chart_file}', '{chart_label}')">
             <h4>{chart_label}</h4>
-            <iframe src="/chart/{chart_file}"></iframe>
+            <iframe src="/chart/{chart_file}" onclick="event.stopPropagation()"></iframe>
         </div>
         """
 
     html += "</div>"
     
+    # Add modal for chart expansion
     html += """
+    <div id="chartModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="modalTitle">Chart</span>
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <iframe id="modalIframe"></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function openModal(chartFile, chartLabel) {
+            const modal = document.getElementById('chartModal');
+            const iframe = document.getElementById('modalIframe');
+            const title = document.getElementById('modalTitle');
+            
+            iframe.src = '/chart/' + chartFile;
+            title.textContent = chartLabel + ' - Full View';
+            modal.style.display = 'block';
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('chartModal');
+            modal.style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('chartModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+    
     <hr>
     <a href="/" class="back-link">← Back to Dashboard</a>
     <footer>Ichimoku Backtest Dashboard • Powered by Python, Flask & Plotly</footer>
