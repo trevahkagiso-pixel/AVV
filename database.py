@@ -44,17 +44,53 @@ def load_from_database(table_name: str, db_path: str) -> pd.DataFrame:
     
     Returns:
         DataFrame loaded from database
+    
+    Raises:
+        ValueError: If table does not exist or database cannot be accessed
     """
     engine = create_engine(db_path)
     query = f"SELECT * FROM '{table_name}'"
-    df = pd.read_sql(query, engine)
     
-    # Convert index column to datetime if present
-    if "index" in df.columns:
-        df["index"] = pd.to_datetime(df["index"])
-        df = df.rename(columns={"index": "timestamp"})
-        df = df.set_index("timestamp")
+    try:
+        df = pd.read_sql(query, engine)
+    except Exception as e:
+        # Provide more helpful error message
+        if "no such table" in str(e).lower():
+            raise ValueError(f"Table '{table_name}' does not exist in {db_path}. Available tables: {list_tables(db_path)}")
+        else:
+            raise ValueError(f"Error loading '{table_name}' from {db_path}: {str(e)}")
     
+    # Normalize common index/timestamp column names into a proper DatetimeIndex
+    # Common names: 'timestamp', 'date', 'datetime', 'index'
+    idx_candidates = [c for c in df.columns if c.lower() in ("timestamp", "date", "datetime", "time", "index")]
+    if idx_candidates:
+        # Prefer explicit 'timestamp' if present
+        preferred = None
+        for name in idx_candidates:
+            if name.lower() == 'timestamp':
+                preferred = name
+                break
+        if preferred is None:
+            preferred = idx_candidates[0]
+
+        try:
+            df[preferred] = pd.to_datetime(df[preferred], errors='coerce')
+            df = df.rename(columns={preferred: 'timestamp'})
+            df = df.set_index('timestamp')
+        except Exception:
+            # If conversion fails, leave as-is
+            pass
+
+    # Ensure index is a DatetimeIndex when possible
+    try:
+        if not isinstance(df.index, pd.DatetimeIndex):
+            df.index = pd.to_datetime(df.index, errors='coerce')
+            if df.index.notna().sum() == 0:
+                # If conversion failed, leave original index
+                df.index = df.index
+    except Exception:
+        pass
+
     return df
 
 

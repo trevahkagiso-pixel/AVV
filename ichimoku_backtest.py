@@ -15,8 +15,9 @@ from ichimoku import (
     create_ichimoku_signal,
     TENKAN, KIJUN, SENKOU_B, ATR_LEN
 )
-from strategy import SignalStrategy
+from strategy import SignalStrategy, SimpleSignalStrategy
 from config import CURRENCY_PAIRS, DATABASE_PATH
+from config import STOCKS_DB_PATH, STOCK_SYMBOLS, COMMODITY_SYMBOLS, COMMODITY_NAMES, COMMODITIES_DB_PATH
 
 
 def run_backtest_from_database(
@@ -31,6 +32,7 @@ def run_backtest_from_database(
     ichimoku_lookback: int = 10,
     ichimoku_min_confirm: int = 5,
     show_plot: bool = False,
+    strategy_class = None,
 ):
     """
     Run a complete Ichimoku backtest using data from local database.
@@ -46,6 +48,7 @@ def run_backtest_from_database(
         ema_back_candles: Number of lookback candles for EMA signal
         ichimoku_lookback: Lookback window for cloud confirmation
         ichimoku_min_confirm: Min bars above/below cloud required
+        strategy_class: Strategy class to use (default: SignalStrategy; use SimpleSignalStrategy for EMA-only)
         show_plot: If True, render Plotly interactive plot
     
     Returns:
@@ -57,6 +60,10 @@ def run_backtest_from_database(
     print(f"\n{'='*70}")
     print(f"Running Ichimoku Backtest: {table_name}")
     print(f"{'='*70}")
+    
+    # Use provided strategy class or default to SignalStrategy
+    if strategy_class is None:
+        strategy_class = SignalStrategy
     
     # Fetch and prepare data
     print(f"📊 Fetching {table_name} from database...")
@@ -87,7 +94,7 @@ def run_backtest_from_database(
     print(f"🎯 Running backtest with {len(df)} candles...")
     bt = Backtest(
         df,
-        SignalStrategy,
+        strategy_class,
         cash=cash,
         commission=commission,
         trade_on_close=True,

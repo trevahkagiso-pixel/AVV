@@ -12,6 +12,7 @@ API_KEY = os.getenv("ALPHA_VANTAGE_API_KEY", "74M88OXCGWTNUIV9")
 # Database Configuration
 DATABASE_PATH = "sqlite:///forex.db"
 STOCKS_DB_PATH = "sqlite:///stocks.db"
+COMMODITIES_DB_PATH = "sqlite:///commodities.db"
 
 # Currency Pairs to fetch
 CURRENCY_PAIRS = [
@@ -24,6 +25,11 @@ CURRENCY_PAIRS = [
 
 # Stock symbols to fetch - Big Five US Tech Stocks
 STOCK_SYMBOLS = ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA"]
+
+# Commodity symbols - Big Five commodities (via yfinance)
+# Gold (GC=F), Crude Oil (CL=F), Natural Gas (NG=F), Copper (HG=F), Silver (SI=F)
+COMMODITY_SYMBOLS = ["GC=F", "CL=F", "NG=F", "HG=F", "SI=F"]
+COMMODITY_NAMES = {"GC=F": "Gold", "CL=F": "Crude Oil", "NG=F": "Natural Gas", "HG=F": "Copper", "SI=F": "Silver"}
 
 # API Rate limiting (requests per minute = 5, so wait 12 seconds between requests)
 API_RATE_LIMIT_SECONDS = 12

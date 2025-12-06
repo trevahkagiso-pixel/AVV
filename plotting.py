@@ -8,6 +8,83 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 
+def get_theme_detection_script() -> str:
+    """
+    Return a JavaScript snippet that detects parent dark-mode class and 
+    updates the Plotly chart layout dynamically.
+    
+    This allows embedded charts (in iframes or divs) to respond to the parent 
+    page's dark-mode toggle without page reload.
+    
+    Returns:
+        HTML <script> tag with theme detection and layout update logic
+    """
+    return """
+    <script>
+    // Theme detection and dynamic chart update
+    (function() {
+        function detectDarkMode() {
+            // Check if parent window or document has 'dark-mode' class
+            try {
+                if (window.parent && window.parent.document) {
+                    return window.parent.document.body.classList.contains('dark-mode');
+                }
+            } catch(e) { /* cross-origin, ignore */ }
+            return document.body.classList.contains('dark-mode') || 
+                   (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        }
+        
+        function applyTheme(isDark) {
+            var template = isDark ? 'plotly_dark' : 'plotly_white';
+            var plots = document.querySelectorAll('[data-plotly]');
+            if (plots.length === 0) {
+                // Fallback: look for any div with plotly graph
+                plots = document.querySelectorAll('.plotly-graph-div');
+            }
+            plots.forEach(function(plot) {
+                if (plot && plot.layout && Plotly) {
+                    var newLayout = Object.assign({}, plot.layout, { template: template });
+                    Plotly.relayout(plot, newLayout);
+                }
+            });
+        }
+        
+        // Detect theme on page load
+        window.addEventListener('load', function() {
+            applyTheme(detectDarkMode());
+        });
+        
+        // Watch for theme changes in parent window (triggered by dark-mode toggle)
+        try {
+            var observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.attributeName === 'class') {
+                        applyTheme(detectDarkMode());
+                    }
+                });
+            });
+            
+            // Observe parent body for class changes (cross-origin safe)
+            if (window.parent && window.parent.document) {
+                try {
+                    observer.observe(window.parent.document.body, {
+                        attributes: true,
+                        attributeFilter: ['class']
+                    });
+                } catch(e) { /* cross-origin */ }
+            }
+            
+            // Also observe local document (for local non-iframe use)
+            observer.observe(document.body, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+        } catch(e) { /* noop */ }
+    })();
+    </script>
+    """
+
+
 def plot_candlestick(df: pd.DataFrame, title: str = "Candlestick Chart") -> None:
     """
     Create and display an interactive candlestick chart.
@@ -33,7 +110,7 @@ def plot_candlestick(df: pd.DataFrame, title: str = "Candlestick Chart") -> None
         yaxis_title="Price",
         xaxis_title="Date",
         xaxis_rangeslider_visible=False,
-        template="plotly_white",
+        template="plotly_dark",
         hovermode="x unified"
     )
     
@@ -98,7 +175,7 @@ def plot_ohlc(df: pd.DataFrame, title: str = "OHLC Chart") -> None:
         yaxis_title="Price",
         xaxis_title="Date",
         xaxis_rangeslider_visible=False,
-        template="plotly_white",
+        template="plotly_dark",
         hovermode="x unified"
     )
     
@@ -141,7 +218,7 @@ def plot_multiple_candlesticks(data_dict: dict, title: str = "Multiple Instrumen
     fig.update_layout(
         title=title,
         height=300 * num_pairs,
-        template="plotly_white",
+        template="plotly_dark",
         hovermode="x unified"
     )
     
@@ -151,6 +228,7 @@ def plot_multiple_candlesticks(data_dict: dict, title: str = "Multiple Instrumen
 def save_candlestick_html(df: pd.DataFrame, filename: str, title: str = "Candlestick Chart") -> None:
     """
     Create a candlestick chart and save it as an HTML file.
+    The saved HTML will detect parent dark-mode and adjust theme dynamically.
     
     Args:
         df: DataFrame with columns: open, high, low, close, and datetime index
@@ -174,11 +252,16 @@ def save_candlestick_html(df: pd.DataFrame, filename: str, title: str = "Candles
         yaxis_title="Price",
         xaxis_title="Date",
         xaxis_rangeslider_visible=False,
-        template="plotly_white",
+        template="plotly_dark",
         hovermode="x unified"
     )
     
     fig.write_html(filename)
+    
+    # Inject theme-detection script into the saved HTML
+    with open(filename, 'a') as f:
+        f.write(get_theme_detection_script())
+    
     print(f"✅ Chart saved to {filename}")
 
 
@@ -226,12 +309,17 @@ def plot_equity_curve(equity_series, title: str = "Equity Curve", filename: str 
         title=title,
         xaxis_title='Time',
         yaxis_title='Equity ($)',
-        template='plotly_white',
+        template='plotly_dark',
         hovermode='x unified',
     )
 
     if filename:
         fig.write_html(filename)
+        
+        # Inject theme-detection script into the saved HTML
+        with open(filename, 'a') as f:
+            f.write(get_theme_detection_script())
+        
         print(f"✅ Equity chart saved to {filename}")
 
     if show:

@@ -73,6 +73,7 @@ def get_base_css():
             line-height: 1.6;
             min-height: 100vh;
             padding: 20px;
+            transition: background 0.25s ease, color 0.25s ease;
         }
         
         .container {
@@ -82,6 +83,7 @@ def get_base_css():
             border-radius: 12px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
             padding: 40px;
+            transition: background 0.25s ease, color 0.25s ease;
         }
         
         header {
@@ -258,6 +260,7 @@ def get_base_css():
             border: none;
             border-radius: 8px;
             margin: 15px 0;
+            background: transparent;
         }
         
         .card-footer {
@@ -482,6 +485,87 @@ def get_base_css():
             font-size: 0.9em;
         }
     </style>
+    <script>
+    // Dark mode toggle: injects a button into the header and persists preference
+    (function() {
+        function setDarkMode(enabled) {
+            try {
+                if (enabled) document.body.classList.add('dark-mode');
+                else document.body.classList.remove('dark-mode');
+                localStorage.setItem('avv_theme', enabled ? 'dark' : 'light');
+                updateToggleUI(enabled);
+            } catch(e) { /* noop */ }
+        }
+
+        function updateToggleUI(enabled) {
+            var btn = document.getElementById('themeToggle');
+            if (!btn) return;
+            btn.textContent = enabled ? '🌙 Dark Mode' : '☀️ Light Mode';
+            btn.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+        }
+
+        function createToggle() {
+            var hdr = document.querySelector('.container header');
+            if (!hdr) hdr = document.querySelector('header');
+            if (!hdr) return;
+
+            var btn = document.createElement('button');
+            btn.id = 'themeToggle';
+            btn.className = 'btn secondary';
+            btn.style.marginLeft = '20px';
+            btn.style.padding = '8px 14px';
+            btn.style.fontSize = '0.9em';
+            btn.onclick = function(e) {
+                var isDark = document.body.classList.contains('dark-mode');
+                setDarkMode(!isDark);
+            };
+
+            // Insert toggle into header (right side)
+            var wrapper = document.createElement('div');
+            wrapper.style.display = 'inline-block';
+            wrapper.style.float = 'right';
+            wrapper.appendChild(btn);
+            hdr.appendChild(wrapper);
+
+            // initialize UI state
+            var stored = localStorage.getItem('avv_theme');
+            var preferDark = stored === 'dark' || (stored === null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            setDarkMode(preferDark);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            createToggle();
+        });
+    })();
+    </script>
+
+    <style>
+    /* Dark mode overrides - enhanced contrast and visibility */
+    .dark-mode body, .dark-mode html { background: linear-gradient(135deg, #0f1724 0%, #0b1220 100%); color: #e8eef8; }
+    .dark-mode .container { background: #0f1724; color: #e8eef8; box-shadow: 0 10px 40px rgba(0,0,0,0.6); border: 1px solid rgba(155,176,255,0.1); }
+    .dark-mode header { border-bottom: 2px solid rgba(155,176,255,0.3); }
+    .dark-mode h1, .dark-mode h2 { color: #c8d5ff; font-weight: 700; }
+    .dark-mode h3 { color: #d4c5ff; font-weight: 700; border-left-color: rgba(155,176,255,0.5); }
+    .dark-mode h4 { color: #b8cfe8; font-weight: 600; }
+    .dark-mode p { color: #d4dce8; }
+    .dark-mode table { border: 1px solid rgba(155,176,255,0.15); }
+    .dark-mode table thead { background: linear-gradient(135deg, #1a2f5a 0%, #2b1f3d 100%); color: #f0f4ff; font-weight: 700; border-bottom: 2px solid rgba(155,176,255,0.2); }
+    .dark-mode table td { color: #d4dce8; border-bottom: 1px solid rgba(155,176,255,0.08); }
+    .dark-mode table tbody tr:last-child { background: rgba(155,176,255,0.05); font-weight: 600; }
+    .dark-mode .btn { background: linear-gradient(135deg, #334155, #1f2937); color: #f5f7ff; font-weight: 600; }
+    .dark-mode .btn.secondary { background: #0b1220; color: #b8d4ff; border: 1px solid rgba(155,176,255,0.2); font-weight: 600; }
+    .dark-mode a { color: #a8c5ff; font-weight: 500; }
+    .dark-mode a:hover { color: #d4e3ff; }
+    .dark-mode .status-banner { color: #f5f7ff; font-weight: 600; border: 1px solid rgba(255,255,255,0.1); }
+    .dark-mode .status-banner.success { background: linear-gradient(135deg, #0f766e, #065f46); border: 1px solid rgba(0,255,200,0.2); }
+    .dark-mode .status-banner.running { background: linear-gradient(135deg, #7c3aed, #db2777); border: 1px solid rgba(255,100,150,0.2); }
+    .dark-mode .error-box { background: #8b1f1f; color: #fff; border: 1px solid rgba(255,100,100,0.3); font-weight: 500; }
+    .dark-mode .equity-card { background: #0f1724; border: 1px solid rgba(155,176,255,0.2); }
+    .dark-mode .equity-card h4 { color: #b8d4ff; }
+    .dark-mode .stat-box { background: rgba(155,176,255,0.08); border-left: 3px solid rgba(155,176,255,0.4); }
+    .dark-mode .stat-box strong { color: #a8c5ff; }
+    .dark-mode .stat-box span { color: #e8eef8; font-weight: 700; }
+    </style>
     """
 
 
@@ -498,6 +582,14 @@ def build_summary(cache_path: str = CACHE_FILE):
     print("Running multi-pair backtests (this may take a while)...")
     df_summary = run_all_pairs_backtest(show_plot=False)
     df_summary.to_csv(cache_path, index=False)
+
+    # Also build commodity backtests and save a separate cache
+    try:
+        from ichimoku_backtest import run_commodity_backtests
+        commodity_df = run_commodity_backtests(show_plot=False)
+        commodity_df.to_csv('commodity_backtest_summary.csv', index=False)
+    except Exception:
+        pass
     print(f"Summary saved to {cache_path}")
     return df_summary
 
@@ -617,6 +709,7 @@ def index():
         <div class="tab-nav">
             <button class="tab-btn active" onclick="showTab('forex')">Forex Results</button>
             <button class="tab-btn" onclick="showTab('stock')">Stock Results</button>
+            <button class="tab-btn" onclick="showTab('commodity')">Commodity Results</button>
         </div>
         <div id="tab-forex" class="tab-content active">
             <h3>📈 Forex Backtest Results</h3>
@@ -629,6 +722,12 @@ def index():
             {stock_table}
             <h3>💹 Stock Equity Curves</h3>
             {stock_equity}
+        </div>
+        <div id="tab-commodity" class="tab-content">
+            <h3>⛏️ Commodity Backtest Results</h3>
+            {commodity_table}
+            <h3>💹 Commodity Equity Curves</h3>
+            {commodity_equity}
         </div>
         <hr>
         <div class="button-group">
@@ -707,10 +806,28 @@ def index():
 
     # Fill template
     # Insert tables and equity sections using f-string to avoid KeyError from CSS curly braces
+    # Commodity table (if available)
+    commodity_table = ""
+    commodity_equity = ""
+    if os.path.exists('commodity_backtest_summary.csv'):
+        commodity_df = pd.read_csv('commodity_backtest_summary.csv')
+        def chart_link_comm(row):
+            try:
+                sym = row.replace('=','_') + '_daily'
+                return f'<a href="/pair/{sym}">View Details →</a>'
+            except Exception:
+                return '(no data)'
+        comm_display = commodity_df.copy()
+        if 'Ticker' in comm_display.columns:
+            comm_display['Details'] = comm_display['Ticker'].apply(chart_link_comm)
+        commodity_table = comm_display.to_html(escape=False, index=False, classes='results-table')
+
     html = html.replace("{forex_table}", forex_table)
     html = html.replace("{forex_equity}", forex_equity)
     html = html.replace("{stock_table}", stock_table)
     html = html.replace("{stock_equity}", stock_equity)
+    html = html.replace("{commodity_table}", commodity_table)
+    html = html.replace("{commodity_equity}", commodity_equity)
     return html
 
 
@@ -762,7 +879,21 @@ def build_status():
 @APP.route("/pair/<pair>")
 def pair_details(pair: str):
     try:
-        stats, df, bt = run_backtest_from_database(pair, show_plot=False)
+        # Determine which database to use based on pair name
+        from config import STOCK_SYMBOLS, COMMODITY_SYMBOLS, STOCKS_DB_PATH, COMMODITIES_DB_PATH
+        
+        # Check if it's a stock
+        base_symbol = pair.split('_')[0].upper()
+        if base_symbol in [s.upper() for s in STOCK_SYMBOLS]:
+            db_path = STOCKS_DB_PATH
+        # Check if it's a commodity (e.g., GC_F_daily -> GC=F)
+        elif any(pair.startswith(sym.replace('=', '_')) for sym in COMMODITY_SYMBOLS):
+            db_path = COMMODITIES_DB_PATH
+        # Default to forex
+        else:
+            db_path = DATABASE_PATH
+        
+        stats, df, bt = run_backtest_from_database(pair, db_path=db_path, show_plot=False)
     except Exception as e:
         html = get_base_css()
         html += f"""

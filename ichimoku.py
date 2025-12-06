@@ -38,8 +38,25 @@ def fetch_data_from_database(table_name: str, db_path: str = "sqlite:///forex.db
         DataFrame with columns: open, high, low, close, (volume)
     """
     df = load_from_database(table_name, db_path)
+
+    # Ensure the index is a proper DatetimeIndex
+    try:
+        if not isinstance(df.index, pd.DatetimeIndex):
+            df.index = pd.to_datetime(df.index, errors='coerce')
+    except Exception:
+        pass
+
     # Standardize column names to title case
     df.columns = [c.title() for c in df.columns]
+
+    # Drop rows with missing essential OHLC values
+    for col in ("Open", "High", "Low", "Close"):
+        if col not in df.columns:
+            # Some tables use lowercase column names; try common variants
+            lower = col.lower()
+            if lower in df.columns:
+                df = df.rename(columns={lower: col})
+
     return df.dropna()
 
 
@@ -177,13 +194,18 @@ def add_ema_signal(df: pd.DataFrame, ema_length: int = 100, back_candles: int = 
     
     # Add EMA
     out["EMA"] = ta.ema(close=out["Close"], length=ema_length)
-    
+
+    # Ensure numeric EMA and handle NaNs safely: comparisons should be False when EMA is not available
+    ema_series = pd.to_numeric(out["EMA"], errors="coerce")
+    ema_for_above = ema_series.fillna(float('inf'))   # missing EMA -> comparisons to inf -> False for '>'
+    ema_for_below = ema_series.fillna(float('-inf'))  # missing EMA -> comparisons to -inf -> False for '<'
+
     # Window size: current bar + back_candles previous bars
     w = int(back_candles) + 1
-    
-    # Booleans per-bar relative to EMA
-    above = (out["Open"] > out["EMA"]) & (out["Close"] > out["EMA"])
-    below = (out["Open"] < out["EMA"]) & (out["Close"] < out["EMA"])
+
+    # Booleans per-bar relative to EMA (use filled series to avoid TypeError on NaN)
+    above = (out["Open"] > ema_for_above) & (out["Close"] > ema_for_above)
+    below = (out["Open"] < ema_for_below) & (out["Close"] < ema_for_below)
     
     # "All true in the last w bars" via rolling sum
     above_all = (above.rolling(w, min_periods=w).sum() == w)
