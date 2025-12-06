@@ -1,172 +1,113 @@
-# 🚀 Quick Start Guide - Ichimoku Integration
+# Quick Start Guide - Strategy Framework
 
-## ✅ Setup (One Time)
+## 1. Verify Installation
 
 ```bash
-cd /workspaces/AV
 source .venv/bin/activate
-pip install -r requirements.txt
+python run_strategy.py
 ```
 
-## 📊 Step 1: Fetch Data (if not done already)
-
-```bash
-python main.py
-```
-
-**Output:** Populates `forex.db` and `stocks.db` with daily data.
-
----
-
-## 🎯 Step 2: Run Ichimoku Backtest
-
-### Option A: Single Pair Test
-```bash
-python ichimoku_runner.py backtest --pair EUR_USD_daily
-```
-
-### Option B: All Pairs Summary
-```bash
-python ichimoku_runner.py multi
-```
-
-### Option C: Custom Cash & Parameters
-```bash
-python ichimoku_runner.py backtest --pair EUR_USD_daily --cash 500000
-```
-
----
-
-## 📈 Step 3: Visualize Results
-
-### Plot Trading Signals
-```bash
-python ichimoku_runner.py plot-signals --pair EUR_USD_daily --start 100 --end 200
-```
-
-### Plot Full Ichimoku Cloud
-```bash
-python ichimoku_runner.py plot-cloud --pair EUR_USD_daily
-```
-
----
-
-## 🔍 Step 4: Optimize Parameters
-
-Find best ATR & Risk-Reward multipliers:
-
-```bash
-python ichimoku_runner.py optimize --pair EUR_USD_daily
-```
-
----
-
-## 📚 Available Pairs (in database)
-
-```
-EUR_USD_daily    GBP_USD_daily    USD_JPY_daily
-AUD_USD_daily    USD_CAD_daily
-```
-
----
-
-## 🎛️ Customize Strategy
-
-Edit `config.py` to adjust:
+## 2. Run Single Backtest
 
 ```python
-# Ichimoku Parameters
-ICHIMOKU_TENKAN = 9           # Conversion line period
-ICHIMOKU_KIJUN = 26           # Base line period
-ICHIMOKU_SENKOU_B = 52        # Cloud span B
+from ichimoku_strategy import create_ichimoku_strategy
+from backtest_runner import run_backtest_with_custom_strategy
 
-# Risk Management
-ATR_MULT_SL = 1.5             # Stop-loss multiplier
-ATR_MULT_TP = 2.0             # Risk-reward ratio
-
-# EMA Trend Filter
-EMA_LENGTH = 100              # EMA period
-EMA_BACK_CANDLES = 7          # Lookback candles
-
-# Signal Generation
-ICHIMOKU_LOOKBACK = 10        # Cloud confirmation
-ICHIMOKU_MIN_CONFIRM = 5      # Min bars above/below
-
-# Backtest
-BACKTEST_CASH = 1_000_000
-BACKTEST_COMMISSION = 0.0002
+strategy = create_ichimoku_strategy()
+stats, df, bt = run_backtest_with_custom_strategy('EUR_USD_daily', strategy)
+print(f"Return: {stats._stats['Return [%]']:.2f}%")
 ```
 
----
+## 3. Test All Pairs
 
-## 📊 Example Output
+```python
+from ichimoku_strategy import create_ichimoku_strategy
+from backtest_runner import run_all_pairs_with_strategy
 
-```
-===================================================
-Running Ichimoku Backtest: EUR_USD_daily
-===================================================
-📊 Fetching EUR_USD_daily from database...
-   Loaded 5000 rows
-📈 Adding Ichimoku Cloud indicators...
-📈 Adding EMA trend filter (length=100)...
-📊 Creating Ichimoku + EMA signals...
-   4949 rows after dropping NaN
-🎯 Running backtest with 4949 candles...
-
-✅ Backtest Results for EUR_USD_daily:
-   Return: -75.43%
-   Max Drawdown: -87.67%
-   Win Rate: 35.06%
-   # Trades: 77
-   Exposure Time: 20.23%
+strategy = create_ichimoku_strategy()
+summary = run_all_pairs_with_strategy(strategy)
+print(summary)
 ```
 
----
+## 4. Compare Strategies
 
-## 💡 Common Tasks
+```python
+from backtest_runner import run_multiple_strategies
+from ichimoku_strategy import create_ichimoku_strategy
+from rsi_strategy import create_rsi_strategy
 
-| Task | Command |
+strategies = {
+    'ichimoku': create_ichimoku_strategy(),
+    'rsi': create_rsi_strategy(),
+}
+
+results = run_multiple_strategies('EUR_USD_daily', strategies)
+```
+
+## 5. Create Your Own Strategy
+
+### File: my_strategy.py
+```python
+from strategy_framework import BaseStrategy
+import pandas as pd
+
+class MyStrategy(BaseStrategy):
+    def __init__(self):
+        super().__init__(name='my_strategy')
+    
+    def add_indicators(self, df: pd.DataFrame) -> pd.DataFrame:
+        df = self.add_atr(df)
+        df = self.add_rsi(df)
+        return df
+    
+    def generate_signals(self, df: pd.DataFrame) -> pd.DataFrame:
+        df['signal'] = 0
+        # Your signal logic
+        return df
+```
+
+### Use It:
+```python
+from my_strategy import MyStrategy
+from backtest_runner import run_backtest_with_custom_strategy
+
+strategy = MyStrategy()
+stats, df, bt = run_backtest_with_custom_strategy('EUR_USD_daily', strategy)
+```
+
+## 6. Using the Registry
+
+```python
+from strategy_framework import get_registry
+from ichimoku_strategy import create_ichimoku_strategy
+
+registry = get_registry()
+registry.register('ichimoku', create_ichimoku_strategy())
+
+# Later...
+strategy = registry.get('ichimoku')
+```
+
+## Files Overview
+
+| File | Purpose |
 |------|---------|
-| Backtest EUR/USD | `python ichimoku_runner.py backtest --pair EUR_USD_daily` |
-| Test all pairs | `python ichimoku_runner.py multi` |
-| View signals | `python ichimoku_runner.py plot-signals --pair EUR_USD_daily --start 100 --end 200` |
-| Optimize | `python ichimoku_runner.py optimize --pair EUR_USD_daily` |
-| Full cloud plot | `python ichimoku_runner.py plot-cloud --pair EUR_USD_daily` |
+| `strategy_framework.py` | Core framework (BaseStrategy, Registry) |
+| `ichimoku_strategy.py` | Ichimoku as a reusable strategy |
+| `rsi_strategy.py` | RSI strategy (example) |
+| `backtest_runner.py` | High-level backtest orchestration |
+| `run_strategy.py` | Quick-start demos |
+| `STRATEGY_FRAMEWORK.md` | Full documentation |
+| `IMPROVEMENTS.md` | Detailed improvements & architecture |
+
+## Key Features
+
+✅ **Modular** - Each strategy is independent  
+✅ **Extensible** - Easy to add new strategies  
+✅ **Backward Compatible** - Old code still works  
+✅ **Well Documented** - Comprehensive guides  
+✅ **Easy to Test** - Quick-start demos included  
 
 ---
 
-## 📖 Full Documentation
-
-- **Strategy Guide:** `ICHIMOKU_README.md`
-- **Integration Details:** `INTEGRATION_SUMMARY.md`
-- **Project Structure:** `PROJECT_STRUCTURE.md`
-- **Data Pipeline:** `PIPELINE_README.md`
-
----
-
-## 🔗 Module Quick Reference
-
-```python
-# Use directly in Python
-from ichimoku_backtest import run_backtest_from_database
-
-stats, df, bt = run_backtest_from_database("EUR_USD_daily")
-print(f"Return: {stats['Return [%]']:.2f}%")
-print(f"Win Rate: {stats['Win Rate [%]']:.2f}%")
-```
-
----
-
-## ⚡ Troubleshooting
-
-**No data?** → Run `python main.py` first  
-**Few signals?** → Lower `ICHIMOKU_MIN_CONFIRM` in config.py  
-**Negative returns?** → Run `optimize` to tune parameters  
-**Plot error?** → Check row indices with `--start` and `--end`  
-
----
-
-**Ready to trade? Start with:**
-```bash
-python ichimoku_runner.py multi
-```
+For detailed documentation, see `STRATEGY_FRAMEWORK.md`

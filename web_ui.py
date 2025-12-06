@@ -29,6 +29,7 @@ from ichimoku_backtest import run_all_pairs_backtest, run_backtest_from_database
 from config import DATABASE_PATH
 import plotting
 import ichimoku
+from backtest_analysis import analyze_backtest_results, format_analysis_for_html, get_analysis_css
 
 APP = Flask(__name__)
 CACHE_FILE = "backtest_summary.csv"
@@ -600,7 +601,12 @@ def pair_details(pair: str):
         else:
             stats_dict[key] = str(val)
 
+    # Generate analysis
+    analysis = analyze_backtest_results(stats, pair=pair_display)
+    analysis_html = format_analysis_for_html(analysis)
+
     html = get_base_css()
+    html += get_analysis_css()
     html += f"""
     <div class="container">
         <header>
@@ -629,6 +635,10 @@ def pair_details(pair: str):
         """
     
     html += "</div>"
+    
+    # Add analysis section
+    html += "<h3>💡 AI-Generated Analysis & Insights</h3>"
+    html += analysis_html
 
     # Charts section
     html += "<h3>📊 Charts</h3>"
