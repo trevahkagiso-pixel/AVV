@@ -64,3 +64,38 @@ Starting web server on http://127.0.0.1:5000
 127.0.0.1 - - [06/Dec/2025 16:37:28] "[36mGET /chart/AAPL_daily_equity.html HTTP/1.1[0m" 304 -
 127.0.0.1 - - [06/Dec/2025 16:37:28] "[36mGET /chart/USD_CAD_daily_equity.html HTTP/1.1[0m" 304 -
 127.0.0.1 - - [06/Dec/2025 16:37:28] "[36mGET /chart/EUR_USD_daily_equity.html HTTP/1.1[0m" 304 -
+ * Detected change in '/workspaces/AV/config.py', reloading
+Starting web server on http://127.0.0.1:5000
+
+======================================================================
+Running Ichimoku Backtest: AAPL_daily
+======================================================================
+📊 Fetching AAPL_daily from database...
+
+======================================================================
+Running Ichimoku Backtest: AAPL_daily
+======================================================================
+📊 Fetching AAPL_daily from database...
+
+======================================================================
+Running Ichimoku Backtest: MSFT_daily
+======================================================================
+📊 Fetching MSFT_daily from database...
+
+======================================================================
+Running Ichimoku Backtest: AAPL_daily
+======================================================================
+📊 Fetching AAPL_daily from database...
+
+======================================================================
+Running Ichimoku Backtest: AAPL_daily
+======================================================================
+📊 Fetching AAPL_daily from database...
+
+======================================================================
+Running Ichimoku Backtest: AAPL_daily
+======================================================================
+📊 Fetching AAPL_daily from database...
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 132-393-940
