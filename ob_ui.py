@@ -163,6 +163,23 @@ def get_base_css():
             background: #bb86fc;
         }
         
+        /* Back to dashboard button */
+        .back-btn {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid transparent;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-right: 12px;
+        }
+
+        .back-btn:hover {
+            background: rgba(102,126,234,0.06);
+            border-color: rgba(102,126,234,0.12);
+        }
+        
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -712,7 +729,7 @@ def plot_ob_signals(df: pd.DataFrame, ob: pd.DataFrame, pair_name: str = "") -> 
         yaxis_title="Price",
         xaxis_rangeslider_visible=False,
         hovermode="x unified",
-        template="plotly_white",
+        template="plotly_dark",
         width=1000,
         height=600,
     )
@@ -764,12 +781,97 @@ def plot_equity_curve(trades: pd.DataFrame, pair_name: str = "") -> go.Figure:
         xaxis_title="Trade Number",
         yaxis_title="Cumulative P&L (R-Multiples)",
         hovermode="x unified",
-        template="plotly_white",
+        template="plotly_dark",
         width=1000,
         height=600,
         showlegend=True,
     )
     
+    return fig
+
+
+def plot_traded_positions(trades: pd.DataFrame, df: pd.DataFrame, pair_name: str = "") -> go.Figure:
+    """
+    Plot candlesticks with entry and exit markers for each trade.
+
+    Args:
+        trades: DataFrame containing trades (must include entry_date, exit_date, entry, exit, outcome_R)
+        df: Price DataFrame with datetime index and open/high/low/close
+        pair_name: Title for the chart
+
+    Returns:
+        Plotly Figure
+    """
+    fig = go.Figure()
+
+    # Candlesticks
+    try:
+        fig.add_trace(go.Candlestick(
+            x=df.index,
+            open=df['open'],
+            high=df['high'],
+            low=df['low'],
+            close=df['close'],
+            name='Price'
+        ))
+    except Exception:
+        fig.add_annotation(text="No price data available", showarrow=False)
+        return fig
+
+    # Add entries/exits
+    if trades is None or trades.empty:
+        fig.add_annotation(text="No trades to plot", showarrow=False)
+        fig.update_layout(title=f"Traded Positions – {pair_name}", template="plotly_dark")
+        return fig
+
+    for _, t in trades.iterrows():
+        # robustly get fields
+        entry_dt = t.get('entry_date') or t.get('entryTime') or t.get('entry_time')
+        exit_dt = t.get('exit_date') or t.get('exitTime') or t.get('exit_time')
+        entry_price = t.get('entry') if pd.notna(t.get('entry')) else None
+        exit_price = t.get('exit') if pd.notna(t.get('exit')) else t.get('exit_price')
+        outcome = t.get('outcome_R', 0)
+
+        # If dates are strings, attempt parse
+        try:
+            if entry_dt is not None and not isinstance(entry_dt, (pd.Timestamp,)):
+                entry_dt = pd.to_datetime(entry_dt)
+            if exit_dt is not None and not isinstance(exit_dt, (pd.Timestamp,)):
+                exit_dt = pd.to_datetime(exit_dt)
+        except Exception:
+            pass
+
+        color = 'green' if outcome > 0 else 'red'
+
+        # Entry marker
+        if entry_dt is not None and entry_price is not None:
+            fig.add_trace(go.Scatter(
+                x=[entry_dt], y=[entry_price], mode='markers',
+                marker=dict(symbol='triangle-up' if outcome >= 0 else 'triangle-down', size=12, color=color),
+                name='Entry', hovertemplate=f"Entry<br>%{{x|%Y-%m-%d}}<br>{entry_price:.4f}<extra></extra>"
+            ))
+
+        # Exit marker
+        if exit_dt is not None and exit_price is not None:
+            fig.add_trace(go.Scatter(
+                x=[exit_dt], y=[exit_price], mode='markers',
+                marker=dict(symbol='circle', size=10, color=color),
+                name='Exit', hovertemplate=f"Exit<br>%{{x|%Y-%m-%d}}<br>{exit_price:.4f}<extra></extra>"
+            ))
+
+        # Line between entry and exit
+        if entry_dt is not None and exit_dt is not None and entry_price is not None and exit_price is not None:
+            fig.add_trace(go.Scatter(
+                x=[entry_dt, exit_dt], y=[entry_price, exit_price], mode='lines',
+                line=dict(color=color, width=2), opacity=0.6, showlegend=False
+            ))
+
+    fig.update_layout(
+        title=f"Traded Positions – {pair_name}",
+        xaxis_title='Date', yaxis_title='Price',
+        xaxis_rangeslider_visible=False, hovermode='x unified', template='plotly_dark', width=1000, height=600
+    )
+
     return fig
 
 
@@ -1143,6 +1245,12 @@ def pair_detail(pair):
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{pair} – Order Block Analysis</title>
         {get_base_css()}
+        <style>
+            .tab-buttons {{ display:flex; gap:8px; margin:12px 0; }}
+            .tab-btn {{ padding:8px 12px; border-radius:6px; background:#222; color:#ddd; border:1px solid #333; cursor:pointer; }}
+            .tab-btn.active {{ background:#0b84ff; color:#fff; }}
+            .tab-content {{ margin-top:12px; }}
+        </style>
     </head>
     <body>
         <div class="container">
@@ -1151,7 +1259,10 @@ def pair_detail(pair):
                     <h1>🔷 {pair}</h1>
                     <p>Order Block Analysis</p>
                 </div>
-                <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <a href="/" class="back-btn">← Dashboard</a>
+                    <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+                </div>
             </header>
     """
     
@@ -1168,10 +1279,19 @@ def pair_detail(pair):
         stats = result.get("stats", {})
         trades = result.get("trades", pd.DataFrame())
         
-        # Summary section
+        # Summary section — now inside tabbed Details View
         html += f"""
-            <h2>Summary</h2>
-            <div class="summary-grid">
+            <div class="tabs">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="showTab('tab-summary', this)">Summary</button>
+                    <button class="tab-btn" onclick="showTab('tab-trades', this)">Trades</button>
+                    <button class="tab-btn" onclick="showTab('tab-plots', this)">Plots</button>
+                    <button class="tab-btn" onclick="showTab('tab-analysis', this)">Analysis</button>
+                </div>
+
+                <div class="tab-content" id="tab-summary">
+                    <h2>Summary</h2>
+                    <div class="summary-grid">
                 <div class="stat-card">
                     <h3>Total Trades</h3>
                     <div class="stat-value">{stats.get('trades', 0)}</div>
@@ -1195,11 +1315,14 @@ def pair_detail(pair):
                     <div class="stat-value">{stats.get('avg_r', 0):.2f}R</div>
                 </div>
             </div>
+        </div>
         """
         
         # Trades table (collapsible)
+        # Wrap trade log in its own tab content
         if not trades.empty:
             html += f"""
+            <div class="tab-content" id="tab-trades" style="display:none">
             <h2>Trade Log</h2>
             <button class="collapsible-header" onclick="toggleCollapsible(this)">
                 <span><span class="toggle-icon">▶</span> Expand Trade Log ({len(trades)} trades)</span>
@@ -1245,9 +1368,11 @@ def pair_detail(pair):
             html += """
                 </tbody>
             </table>
+            </div>
+            </div>
             """
         
-        # Charts
+        # Charts (placed into the Plots tab)
         try:
             from database import load_from_database
             
@@ -1271,17 +1396,30 @@ def pair_detail(pair):
             chart_file = f"{pair}_ob_clean.html"
             fig.write_html(chart_file)
             
+            # Create trades overlay chart (entries/exits)
+            try:
+                fig_trades = plot_traded_positions(trades, df, pair)
+                trades_file = f"{pair}_ob_trades.html"
+                fig_trades.write_html(trades_file)
+            except Exception:
+                trades_file = chart_file
+
             # Create equity curve
             fig_equity = plot_equity_curve(trades, pair)
             equity_file = f"{pair}_ob_equity.html"
             fig_equity.write_html(equity_file)
             
             html += f"""
+            <div class="tab-content" id="tab-plots" style="display:none">
             <h2>Charts</h2>
             <div class="equity-grid">
                 <div class="equity-card clickable" onclick="openModal('{chart_file}', 'OB Detection Chart')">
                     <h4>📊 OB Detection Chart</h4>
                     <iframe src="/chart/{chart_file}" onclick="event.stopPropagation()"></iframe>
+                </div>
+                <div class="equity-card clickable" onclick="openModal('{trades_file}', 'Traded Positions')">
+                    <h4>🎯 Traded Positions</h4>
+                    <iframe src="/chart/{trades_file}" onclick="event.stopPropagation()"></iframe>
                 </div>
                 <div class="equity-card clickable" onclick="openModal('{equity_file}', 'Equity Curve')">
                     <h4>📈 Equity Curve</h4>
@@ -1290,9 +1428,17 @@ def pair_detail(pair):
             </div>
             """
             
-            # Add analysis text
+            # Add analysis text (place it in the Analysis tab)
             analysis_html = generate_analysis_text(stats, trades, pair)
+            # close the plots tab content and open analysis tab
+            html += """
+            </div>
+            <div class="tab-content" id="tab-analysis" style="display:none">
+            """
             html += analysis_html
+            html += """
+            </div>
+            """
         
         except Exception as e:
             print(f"Chart generation error for {pair}: {e}")
@@ -1315,6 +1461,33 @@ def pair_detail(pair):
     </div>
     
     <script>
+        function showTab(tabId, btn) {
+            // hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+            // remove active class from buttons
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            // show requested tab
+            const t = document.getElementById(tabId);
+            if (t) t.style.display = 'block';
+            // mark button active
+            if (btn) btn.classList.add('active');
+        }
+
+        // Ensure default tab is shown on load
+        document.addEventListener('DOMContentLoaded', function() {
+            // if a tab button is active, use it; otherwise default to summary
+            const active = document.querySelector('.tab-btn.active');
+            if (active) {
+                const onclick = active.getAttribute('onclick');
+                // try to parse the target id from the onclick call
+                const m = onclick && onclick.match(/showTab\('([^']+)'/);
+                if (m && m[1]) showTab(m[1], active);
+                else showTab('tab-summary', active);
+            } else {
+                showTab('tab-summary', document.querySelector('.tab-btn'));
+            }
+        });
+
         function toggleCollapsible(button) {
             const content = button.nextElementSibling;
             const icon = button.querySelector('.toggle-icon');

@@ -548,23 +548,29 @@ def get_base_css():
     .dark-mode h3 { color: #d4c5ff; font-weight: 700; border-left-color: rgba(155,176,255,0.5); }
     .dark-mode h4 { color: #b8cfe8; font-weight: 600; }
     .dark-mode p { color: #d4dce8; }
-    .dark-mode table { border: 1px solid rgba(155,176,255,0.15); }
+    .dark-mode li { color: #d4dce8; }
+    .dark-mode table { border: 1px solid rgba(155,176,255,0.15); background: #1a2f5a; }
     .dark-mode table thead { background: linear-gradient(135deg, #1a2f5a 0%, #2b1f3d 100%); color: #f0f4ff; font-weight: 700; border-bottom: 2px solid rgba(155,176,255,0.2); }
     .dark-mode table td { color: #d4dce8; border-bottom: 1px solid rgba(155,176,255,0.08); }
     .dark-mode table tbody tr:last-child { background: rgba(155,176,255,0.05); font-weight: 600; }
     .dark-mode .btn { background: linear-gradient(135deg, #334155, #1f2937); color: #f5f7ff; font-weight: 600; }
-    .dark-mode .btn.secondary { background: #0b1220; color: #b8d4ff; border: 1px solid rgba(155,176,255,0.2); font-weight: 600; }
+    .dark-mode .btn.secondary { background: #1a3a52; color: #b8d4ff; border: 1px solid rgba(155,176,255,0.2); font-weight: 600; }
     .dark-mode a { color: #a8c5ff; font-weight: 500; }
     .dark-mode a:hover { color: #d4e3ff; }
     .dark-mode .status-banner { color: #f5f7ff; font-weight: 600; border: 1px solid rgba(255,255,255,0.1); }
     .dark-mode .status-banner.success { background: linear-gradient(135deg, #0f766e, #065f46); border: 1px solid rgba(0,255,200,0.2); }
     .dark-mode .status-banner.running { background: linear-gradient(135deg, #7c3aed, #db2777); border: 1px solid rgba(255,100,150,0.2); }
     .dark-mode .error-box { background: #8b1f1f; color: #fff; border: 1px solid rgba(255,100,100,0.3); font-weight: 500; }
-    .dark-mode .equity-card { background: #0f1724; border: 1px solid rgba(155,176,255,0.2); }
+    .dark-mode .equity-card { background: #1a3a52; border: 1px solid rgba(155,176,255,0.3); color: #d4dce8; }
     .dark-mode .equity-card h4 { color: #b8d4ff; }
-    .dark-mode .stat-box { background: rgba(155,176,255,0.08); border-left: 3px solid rgba(155,176,255,0.4); }
+    .dark-mode .equity-card p { color: #d4dce8; }
+    .dark-mode .equity-card strong { color: #e8eef8; }
+    .dark-mode .stat-box { background: rgba(155,176,255,0.08); border-left: 3px solid rgba(155,176,255,0.4); color: #d4dce8; }
     .dark-mode .stat-box strong { color: #a8c5ff; }
     .dark-mode .stat-box span { color: #e8eef8; font-weight: 700; }
+    .dark-mode ul li { color: #d4dce8; }
+    .dark-mode ol li { color: #d4dce8; }
+    .dark-mode .analysis-section { background: #1a3a52; border: 1px solid rgba(155,176,255,0.2); color: #d4dce8; }
     </style>
     """
 
