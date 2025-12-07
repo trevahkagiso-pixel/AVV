@@ -22,3 +22,10 @@ Press CTRL+C to quit
 127.0.0.1 - - [07/Dec/2025 10:20:30] "GET /chart/EUR_USD_daily_ob_trades.html HTTP/1.1" 200 -
 127.0.0.1 - - [07/Dec/2025 10:20:30] "GET /chart/EUR_USD_daily_ob_clean.html HTTP/1.1" 200 -
 127.0.0.1 - - [07/Dec/2025 10:21:32] "GET / HTTP/1.1" 200 -
+ * Detected change in '/workspaces/AVV/web_ui.py', reloading
+🔷 Starting OB UI server on http://127.0.0.1:5001
+ * Restarting with stat
+/workspaces/AVV/ob_ui.py:1450: SyntaxWarning: invalid escape sequence '\('
+  html += """
+ * Debugger is active!
+ * Debugger PIN: 122-460-143
