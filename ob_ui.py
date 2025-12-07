@@ -56,7 +56,7 @@ _build_state = {
 # Database pairs (mirrored from ichimoku_backtest)
 FOREX_PAIRS = [
     "EUR_USD_daily", "GBP_USD_daily", "AUD_USD_daily",
-    "EURUSD_1h", "GBPUSD_1h", "AUDUSD_1h"
+    "USD_CAD_daily", "USD_JPY_daily",
 ]
 STOCK_PAIRS = ["AAPL_daily", "MSFT_daily", "GOOGL_daily", "AMZN_daily", "NVDA_daily"]
 COMMODITY_PAIRS = [
@@ -275,6 +275,14 @@ def get_base_css():
             height: 300px;
             border: none;
         }
+
+        .chart-meta {
+            font-size: 12px;
+            color: #666;
+            padding: 8px 12px 16px 12px;
+        }
+
+        .dark-mode .chart-meta { color: #bbb; }
         
         .clickable {
             cursor: pointer;
@@ -459,10 +467,16 @@ def get_base_css():
         }
 
         .dark-mode .analysis-section {
-            background: #151423;
+            background: #1a1a2e;
             border-color: #2b2b3a;
-            color: #e6e6e6;
+            color: #ffffff;
         }
+
+        .analysis-section ul { margin-left: 18px; }
+        .analysis-section li { margin: 8px 0; }
+        .analysis-section strong { color: #ffffff; }
+        .analysis-block { background: #f0f0f0; padding: 15px; border-radius: 8px; margin: 15px 0; color: #111; }
+        .dark-mode .analysis-block { background: #1a1a2e; color: #ffffff; }
         
         .error {
             background: #ffebee;
@@ -975,13 +989,13 @@ def generate_analysis_text(stats: dict, trades: pd.DataFrame, pair_name: str = "
     <div class="analysis-section">
         <h3>📊 Backtest Analysis for {pair_name}</h3>
         
-        <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin: 15px 0;">
+        <div class="analysis-block">
             <p><strong>Overall Verdict:</strong> <span style="color: #333; font-size: 1.2em;">{quality_verdict}</span></p>
             <p>{quality_desc}</p>
         </div>
         
         <h4>📈 Performance Breakdown</h4>
-        <div style="background: #f9f9f9; padding: 15px; border-radius: 6px; margin: 15px 0;">
+        <div class="analysis-block">
         <ul>
             <li><strong>Sample Size:</strong> {trades_count} trades executed during backtest period. This sample provides {'strong' if trades_count >= 20 else 'moderate' if trades_count >= 10 else 'limited'} statistical confidence.</li>
             
@@ -1525,6 +1539,23 @@ def pair_detail(pair):
             fig_equity = plot_equity_curve(trades, pair)
             equity_file = f"{pair}_ob_equity.html"
             fig_equity.write_html(equity_file)
+
+            # Helper to get file metadata
+            def _file_meta(path: str) -> str:
+                try:
+                    if not os.path.exists(path):
+                        return "—"
+                    size = os.path.getsize(path)
+                    mtime = time.localtime(os.path.getmtime(path))
+                    friendly_size = f"{size/1024:.1f} KB"
+                    friendly_time = time.strftime('%Y-%m-%d %H:%M', mtime)
+                    return f"{friendly_size} · {friendly_time}"
+                except Exception:
+                    return "—"
+
+            chart_meta = _file_meta(chart_file)
+            trades_meta = _file_meta(trades_file)
+            equity_meta = _file_meta(equity_file)
             
             html += f"""
             <div class="tab-content" id="tab-plots" style="display:none">
@@ -1533,14 +1564,17 @@ def pair_detail(pair):
                 <div class="equity-card clickable" onclick="openModal('{chart_file}', 'OB Detection Chart')">
                     <h4>📊 OB Detection Chart</h4>
                     <iframe data-src="/chart/{chart_file}" src="about:blank" onclick="event.stopPropagation()"></iframe>
+                    <div class="chart-meta">{chart_meta}</div>
                 </div>
                 <div class="equity-card clickable" onclick="openModal('{trades_file}', 'Traded Positions')">
                     <h4>🎯 Traded Positions</h4>
                     <iframe data-src="/chart/{trades_file}" src="about:blank" onclick="event.stopPropagation()"></iframe>
+                    <div class="chart-meta">{trades_meta}</div>
                 </div>
                 <div class="equity-card clickable" onclick="openModal('{equity_file}', 'Equity Curve')">
                     <h4>📈 Equity Curve</h4>
                     <iframe data-src="/chart/{equity_file}" src="about:blank" onclick="event.stopPropagation()"></iframe>
+                    <div class="chart-meta">{equity_meta}</div>
                 </div>
             </div>
             """
@@ -1564,7 +1598,7 @@ def pair_detail(pair):
         html += f'<div class="error">Error: {str(e)}</div>'
     
     # Modal
-    html += """
+    html += r"""
     <div id="chartModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">

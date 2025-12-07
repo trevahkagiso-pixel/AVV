@@ -1,0 +1,23 @@
+{
+  "FOREX_PAIRS": [
+    "EUR_USD_daily",
+    "GBP_USD_daily",
+    "AUD_USD_daily",
+    "USD_CAD_daily",
+    "USD_JPY_daily"
+  ],
+  "STOCK_PAIRS": [
+    "AAPL_daily",
+    "MSFT_daily",
+    "GOOGL_daily",
+    "AMZN_daily",
+    "NVDA_daily"
+  ],
+  "COMMODITY_PAIRS": [
+    "GC_F_daily",
+    "CL_F_daily",
+    "NG_F_daily",
+    "HG_F_daily",
+    "SI_F_daily"
+  ]
+}

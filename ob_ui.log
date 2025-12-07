@@ -1,6 +1,4 @@
 nohup: ignoring input
-/workspaces/AVV/ob_ui.py:1567: SyntaxWarning: invalid escape sequence '\('
-  html += """
 🔷 Starting OB UI server on http://127.0.0.1:5001
  * Serving Flask app 'ob_ui'
  * Debug mode: on
@@ -8,17 +6,11 @@ WARNING: This is a development server. Do not use it in a production deployment.
  * Running on http://127.0.0.1:5001
 Press CTRL+C to quit
  * Restarting with stat
-/workspaces/AVV/ob_ui.py:1567: SyntaxWarning: invalid escape sequence '\('
-  html += """
  * Debugger is active!
- * Debugger PIN: 122-460-143
-127.0.0.1 - - [07/Dec/2025 11:01:07] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 11:01:25] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 11:01:36] "GET /pair/GBP_USD_daily HTTP/1.1" 200 -
- * Detected change in '/workspaces/AVV/ob_ui.py', reloading
-🔷 Starting OB UI server on http://127.0.0.1:5001
- * Restarting with stat
-/workspaces/AVV/ob_ui.py:1567: SyntaxWarning: invalid escape sequence '\('
-  html += """
- * Debugger is active!
- * Debugger PIN: 122-460-143
+ * Debugger PIN: 135-549-702
+127.0.0.1 - - [07/Dec/2025 13:05:26] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 13:12:11] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 13:12:27] "GET /chart/EUR_USD_daily_ob_trades.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 13:12:27] "GET /chart/EUR_USD_daily_ob_clean.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 13:12:27] "GET /chart/EUR_USD_daily_ob_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 13:12:42] "GET /chart/EUR_USD_daily_ob_trades.html HTTP/1.1" 304 -

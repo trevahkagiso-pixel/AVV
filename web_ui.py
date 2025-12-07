@@ -259,6 +259,14 @@ def get_base_css():
             height: 380px;
             border: none;
             border-radius: 8px;
+
+        .chart-meta {
+            font-size: 12px;
+            color: #666;
+            padding: 8px 12px 16px 12px;
+        }
+
+        .dark-mode .chart-meta { color: #bbb; }
             margin: 15px 0;
             background: transparent;
         }
@@ -1010,10 +1018,23 @@ def pair_details(pair: str):
         print(f"Ichimoku chart error: {e}")
 
     for chart_label, chart_file in charts:
+        # compute file meta
+        try:
+            if os.path.exists(chart_file):
+                _size = os.path.getsize(chart_file)
+                _meta_size = f"{_size/1024:.1f} KB"
+                _meta_time = time.strftime('%Y-%m-%d %H:%M', time.localtime(os.path.getmtime(chart_file)))
+                _meta = f"{_meta_size} · {_meta_time}"
+            else:
+                _meta = '—'
+        except Exception:
+            _meta = '—'
+
         html += f"""
         <div class='equity-card clickable' onclick="openModal('{chart_file}', '{chart_label}')">
             <h4>{chart_label}</h4>
             <iframe data-src="/chart/{chart_file}" src="about:blank" onclick="event.stopPropagation()"></iframe>
+            <div class="chart-meta">{_meta}</div>
         </div>
         """
 
