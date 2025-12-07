@@ -8,15 +8,8 @@ Press CTRL+C to quit
  * Restarting with stat
  * Debugger is active!
  * Debugger PIN: 766-405-245
-127.0.0.1 - - [07/Dec/2025 08:04:06] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 08:04:24] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 08:04:25] "GET /pair/GBP_USD_daily HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 08:06:30] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 08:07:00] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 08:07:03] "GET /chart/EUR_USD_daily_ob_equity.html HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 08:07:03] "GET /chart/EUR_USD_daily_ob_clean.html HTTP/1.1" 200 -
- * Detected change in '/workspaces/AVV/ob_ui.py', reloading
-🔷 Starting OB UI server on http://127.0.0.1:5001
- * Restarting with stat
- * Debugger is active!
- * Debugger PIN: 766-405-245
+127.0.0.1 - - [07/Dec/2025 08:24:33] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:25:48] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:29:32] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:29:35] "GET /chart/EUR_USD_daily_ob_clean.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:29:35] "GET /chart/EUR_USD_daily_ob_equity.html HTTP/1.1" 200 -

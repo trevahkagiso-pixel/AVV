@@ -477,6 +477,58 @@ def get_base_css():
         .dark-mode hr {
             border-top-color: #444;
         }
+        
+        /* Collapsible Trade Log Styles */
+        .collapsible-header {
+            background: #667eea;
+            color: white;
+            padding: 15px 20px;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 6px 6px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s ease;
+        }
+        
+        .dark-mode .collapsible-header {
+            background: #764ba2;
+        }
+        
+        .collapsible-header:hover {
+            background: #764ba2;
+        }
+        
+        .dark-mode .collapsible-header:hover {
+            background: #bb86fc;
+        }
+        
+        .collapsible-content {
+            max-height: 500px;
+            overflow-y: auto;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            opacity: 1;
+        }
+        
+        .collapsible-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        
+        .toggle-icon {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        
+        .toggle-icon.collapsed {
+            transform: rotate(-90deg);
+        }
     </style>
     """
 
@@ -800,6 +852,18 @@ def generate_analysis_text(stats: dict, trades: pd.DataFrame, pair_name: str = "
     pnl_verdict = "LOSS" if total_pnl < 0 else "PROFIT"
     pnl_color = "red" if total_pnl < 0 else "green"
     
+    # Extended performance insights
+    if trades_count > 0:
+        loss_pnl = trades[trades['outcome_R'] <= 0]['outcome_R'].sum() if 'outcome_R' in trades.columns else 0
+        win_pnl = trades[trades['outcome_R'] > 0]['outcome_R'].sum() if 'outcome_R' in trades.columns else 0
+        avg_win = trades[trades['outcome_R'] > 0]['outcome_R'].mean() if wins > 0 else 0
+        avg_loss = trades[trades['outcome_R'] <= 0]['outcome_R'].mean() if losses > 0 else 0
+        profit_factor = abs(win_pnl / loss_pnl) if loss_pnl != 0 else float('inf')
+        largest_win = trades['outcome_R'].max() if len(trades) > 0 else 0
+        largest_loss = trades['outcome_R'].min() if len(trades) > 0 else 0
+    else:
+        loss_pnl = win_pnl = avg_win = avg_loss = profit_factor = largest_win = largest_loss = 0
+    
     html = f"""
     <div class="analysis-section">
         <h3>📊 Backtest Analysis for {pair_name}</h3>
@@ -810,13 +874,41 @@ def generate_analysis_text(stats: dict, trades: pd.DataFrame, pair_name: str = "
         </div>
         
         <h4>📈 Performance Breakdown</h4>
+        <div style="background: #f9f9f9; padding: 15px; border-radius: 6px; margin: 15px 0;">
         <ul>
-            <li><strong>Total Trades:</strong> {trades_count} trades executed</li>
-            <li><strong>Win/Loss Record:</strong> {wins} wins, {losses} losses</li>
-            <li><strong>Win Rate:</strong> {win_rate:.1f}% ({win_loss_insight})</li>
-            <li><strong>Risk-Adjusted Returns:</strong> {r_insight}</li>
-            <li><strong>Total P&L:</strong> <span style="color: {pnl_color}; font-weight: bold;">{total_pnl:+.2f}R ({pnl_verdict})</span></li>
+            <li><strong>Sample Size:</strong> {trades_count} trades executed during backtest period. This sample provides {'strong' if trades_count >= 20 else 'moderate' if trades_count >= 10 else 'limited'} statistical confidence.</li>
+            
+            <li><strong>Win/Loss Record:</strong> {wins} winning trades vs {losses} losing trades. 
+                {'This shows a healthy win rate with more wins than losses.' if win_rate > 50 else 'This is below the 50% breakeven threshold and indicates the strategy is losing more trades than it wins.'}
+            </li>
+            
+            <li><strong>Win Rate Analysis:</strong> {win_rate:.1f}% ({win_loss_insight})
+                <ul style="margin-left: 20px; margin-top: 8px;">
+                    <li>Expected breakeven: ~50% (1:1 risk-reward)</li>
+                    <li>Actual performance: {'Well above' if win_rate >= 60 else 'Above' if win_rate > 50 else 'Below'} breakeven</li>
+                    <li>Win rate sustainability: {'Very high - this strategy has strong edge' if win_rate >= 60 else 'Good - edge present' if win_rate > 55 else 'Moderate - limited edge' if win_rate > 50 else 'Low - strategy is losing'}</li>
+                </ul>
+            </li>
+            
+            <li><strong>Risk-Adjusted Returns (R-Multiples):</strong> {r_insight}
+                <ul style="margin-left: 20px; margin-top: 8px;">
+                    <li>Average per winning trade: {avg_win:+.3f}R</li>
+                    <li>Average per losing trade: {avg_loss:+.3f}R</li>
+                    <li>Profit Factor: {profit_factor:.2f}x (winners are {profit_factor:.2f}x larger than losers)</li>
+                    <li>Largest winning trade: {largest_win:+.2f}R</li>
+                    <li>Largest losing trade: {largest_loss:+.2f}R</li>
+                </ul>
+            </li>
+            
+            <li><strong>Total P&L Summary:</strong> <span style="color: {pnl_color}; font-weight: bold;">{total_pnl:+.2f}R total ({pnl_verdict})</span>
+                <ul style="margin-left: 20px; margin-top: 8px;">
+                    <li>Gross profit from winners: {win_pnl:+.2f}R</li>
+                    <li>Total loss from losers: {loss_pnl:+.2f}R</li>
+                    <li>Net outcome: {total_pnl:+.2f}R ({'Highly positive edge' if total_pnl > 5 else 'Positive edge' if total_pnl > 0 else 'Negative - strategy needs redesign'})</li>
+                </ul>
+            </li>
         </ul>
+        </div>
         
         <h4>🎯 Key Insights</h4>
         <ul>
@@ -1105,10 +1197,14 @@ def pair_detail(pair):
             </div>
         """
         
-        # Trades table
+        # Trades table (collapsible)
         if not trades.empty:
-            html += """
+            html += f"""
             <h2>Trade Log</h2>
+            <button class="collapsible-header" onclick="toggleCollapsible(this)">
+                <span><span class="toggle-icon">▶</span> Expand Trade Log ({len(trades)} trades)</span>
+            </button>
+            <div class="collapsible-content">
             <table>
                 <thead>
                     <tr>
@@ -1219,6 +1315,19 @@ def pair_detail(pair):
     </div>
     
     <script>
+        function toggleCollapsible(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('.toggle-icon');
+            
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                icon.classList.remove('collapsed');
+            } else {
+                content.classList.add('collapsed');
+                icon.classList.add('collapsed');
+            }
+        }
+        
         function openModal(chartFile, chartLabel) {
             const modal = document.getElementById('chartModal');
             const iframe = document.getElementById('modalIframe');

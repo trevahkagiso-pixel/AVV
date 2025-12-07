@@ -1,0 +1,195 @@
+nohup: ignoring input
+Starting web server on http://127.0.0.1:5000
+ * Serving Flask app 'web_ui'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 766-405-245
+127.0.0.1 - - [07/Dec/2025 08:24:33] "GET / HTTP/1.1" 200 -
+Starting web server on http://127.0.0.1:5000
+
+======================================================================
+Running Ichimoku Backtest: EUR_USD_daily
+======================================================================
+📊 Fetching EUR_USD_daily from database...
+   Loaded 5000 rows
+📈 Adding Ichimoku Cloud indicators...
+📈 Adding EMA trend filter (length=100)...
+📊 Creating Ichimoku + EMA signals...
+   4949 rows after dropping NaN
+🎯 Running backtest with 4949 candles...
+Backtest.run:   0%|          | 0/4948 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [07/Dec/2025 08:24:42] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:27:11] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:27:13] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:13] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:27:13] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:13] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:13] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:14] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:14] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:31] "GET /build_status HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:27:35] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:27:35] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:35] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:35] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:35] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:36] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:36] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:37] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:39] "GET /rebuild_async HTTP/1.1" 302 -
+
+✅ Backtest Results for EUR_USD_daily:
+   Return: -73.32%
+   Max Drawdown: -87.11%
+   Win Rate: 35.53%
+   # Trades: 76
+   Exposure Time: 20.11%
+✅ Equity chart saved to EUR_USD_daily_equity.html
+✅ Chart saved to EUR_USD_daily_clean.html
+[build_tasks] Running multi-pair backtests (worker)
+
+======================================================================
+🚀 Running Multi-Pair Ichimoku Backtest
+======================================================================
+
+======================================================================
+Running Ichimoku Backtest: EUR_USD_daily
+======================================================================
+📊 Fetching EUR_USD_daily from database...
+   Loaded 5000 rows
+📈 Adding Ichimoku Cloud indicators...
+📈 Adding EMA trend filter (length=100)...
+📊 Creating Ichimoku + EMA signals...
+   4949 rows after dropping NaN
+🎯 Running backtest with 4949 candles...
+Backtest.run:   0%|          | 0/4948 [00:00<?, ?bar/s]                                                       
+✅ Backtest Results for EUR_USD_daily:
+   Return: -73.32%
+   Max Drawdown: -87.11%
+   Win Rate: 35.53%
+   # Trades: 76
+   Exposure Time: 20.11%
+
+======================================================================
+Running Ichimoku Backtest: GBP_USD_daily
+======================================================================
+📊 Fetching GBP_USD_daily from database...
+   Loaded 5000 rows
+📈 Adding Ichimoku Cloud indicators...
+📈 Adding EMA trend filter (length=100)...
+📊 Creating Ichimoku + EMA signals...
+   4949 rows after dropping NaN
+🎯 Running backtest with 4949 candles...
+Backtest.run:   0%|          | 0/4948 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [07/Dec/2025 08:27:39] "GET / HTTP/1.1" 200 -
+
+✅ Backtest Results for GBP_USD_daily:
+   Return: -97.66%
+   Max Drawdown: -97.84%
+   Win Rate: 28.00%
+   # Trades: 75
+   Exposure Time: 19.20%
+
+======================================================================
+Running Ichimoku Backtest: USD_JPY_daily
+======================================================================
+📊 Fetching USD_JPY_daily from database...
+   Loaded 5000 rows
+📈 Adding Ichimoku Cloud indicators...
+📈 Adding EMA trend filter (length=100)...
+📊 Creating Ichimoku + EMA signals...
+   4949 rows after dropping NaN
+🎯 Running backtest with 4949 candles...
+Backtest.run:   0%|          | 0/4948 [00:00<?, ?bar/s]                                                       /workspaces/AVV/ichimoku_backtest.py:106: UserWarning:
+
+Some trades remain open at the end of backtest. Use `Backtest(..., finalize_trades=True)` to close them and include them in stats.
+
+
+✅ Backtest Results for USD_JPY_daily:
+   Return: -86.76%
+   Max Drawdown: -96.64%
+   Win Rate: 33.33%
+   # Trades: 87
+   Exposure Time: 22.02%
+
+======================================================================
+Running Ichimoku Backtest: AUD_USD_daily
+======================================================================
+📊 Fetching AUD_USD_daily from database...
+   Loaded 5000 rows
+📈 Adding Ichimoku Cloud indicators...
+📈 Adding EMA trend filter (length=100)...
+📊 Creating Ichimoku + EMA signals...
+   4949 rows after dropping NaN
+🎯 Running backtest with 4949 candles...
+Backtest.run:   0%|          | 0/4948 [00:00<?, ?bar/s]                                                       
+✅ Backtest Results for AUD_USD_daily:
+   Return: -98.22%
+   Max Drawdown: -99.73%
+   Win Rate: 32.86%
+   # Trades: 70
+   Exposure Time: 22.77%
+
+======================================================================
+Running Ichimoku Backtest: USD_CAD_daily
+======================================================================
+📊 Fetching USD_CAD_daily from database...
+   Loaded 5000 rows
+📈 Adding Ichimoku Cloud indicators...
+📈 Adding EMA trend filter (length=100)...
+📊 Creating Ichimoku + EMA signals...
+   4949 rows after dropping NaN
+🎯 Running backtest with 4949 candles...
+Backtest.run:   0%|          | 0/4948 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [07/Dec/2025 08:27:40] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:40] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:40] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:40] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:40] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:40] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:27:40] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 08:28:35] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:28:36] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:28:36] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:28:36] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:28:36] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:28:36] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:28:36] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:28:36] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 200 -
+
+✅ Backtest Results for USD_CAD_daily:
+   Return: -74.88%
+   Max Drawdown: -88.43%
+   Win Rate: 37.97%
+   # Trades: 79
+   Exposure Time: 25.08%
+
+======================================================================
+📊 Multi-Pair Backtest Summary
+======================================================================
+      Pair  Return [%]  Max DD [%]  ...  Win Rate [%]  # Trades  Exposure [%]
+0  EUR/USD      -73.32      -87.11  ...         35.53     76.00         20.11
+1  GBP/USD      -97.66      -97.84  ...         28.00     75.00         19.20
+2  USD/JPY      -86.76      -96.64  ...         33.33     87.00         22.02
+3  AUD/USD      -98.22      -99.73  ...         32.86     70.00         22.77
+4  USD/CAD      -74.88      -88.43  ...         37.97     79.00         25.08
+5  AVERAGE      -86.17      -93.95  ...         33.54     77.40         21.83
+
+[6 rows x 7 columns]
+[build_tasks] Summary saved to backtest_summary.csv
+
+======================================================================
+Running Ichimoku Backtest: EUR_USD_daily
+======================================================================
+📊 Fetching EUR_USD_daily from database...
+   Loaded 5000 rows
+📈 Adding Ichimoku Cloud indicators...
+📈 Adding EMA trend filter (length=100)...
+📊 Creating Ichimoku + EMA signals...
+   4949 rows after dropping NaN
+🎯 Running backtest with 4949 candles...
+Backtest.run:   0%|          | 0/4948 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [07/Dec/2025 08:29:16] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:29:18] "GET /chart/EUR_USD_daily_clean.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:29:18] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 08:29:18] "GET /chart/EUR_USD_daily_ichimoku.html HTTP/1.1" 200 -

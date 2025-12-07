@@ -387,6 +387,7 @@ def plot_signals_ichimoku(
         yaxis_title="Price",
         xaxis_rangeslider_visible=False,
         hovermode="x unified",
+        template="plotly_dark",
         legend=dict(orientation="h", yanchor="bottom", y=1.01, xanchor="left", x=0)
     )
 
