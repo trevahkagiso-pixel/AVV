@@ -452,11 +452,16 @@ def get_base_css():
             border-radius: 8px;
             padding: 20px;
             margin: 20px 0;
+            color: #111;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.5;
+            font-size: 15px;
         }
-        
+
         .dark-mode .analysis-section {
-            background: #2d2d44;
-            border-color: #444;
+            background: #151423;
+            border-color: #2b2b3a;
+            color: #e6e6e6;
         }
         
         .error {
@@ -1527,15 +1532,15 @@ def pair_detail(pair):
             <div class="equity-grid">
                 <div class="equity-card clickable" onclick="openModal('{chart_file}', 'OB Detection Chart')">
                     <h4>📊 OB Detection Chart</h4>
-                    <iframe src="/chart/{chart_file}" onclick="event.stopPropagation()"></iframe>
+                    <iframe data-src="/chart/{chart_file}" src="about:blank" onclick="event.stopPropagation()"></iframe>
                 </div>
                 <div class="equity-card clickable" onclick="openModal('{trades_file}', 'Traded Positions')">
                     <h4>🎯 Traded Positions</h4>
-                    <iframe src="/chart/{trades_file}" onclick="event.stopPropagation()"></iframe>
+                    <iframe data-src="/chart/{trades_file}" src="about:blank" onclick="event.stopPropagation()"></iframe>
                 </div>
                 <div class="equity-card clickable" onclick="openModal('{equity_file}', 'Equity Curve')">
                     <h4>📈 Equity Curve</h4>
-                    <iframe src="/chart/{equity_file}" onclick="event.stopPropagation()"></iframe>
+                    <iframe data-src="/chart/{equity_file}" src="about:blank" onclick="event.stopPropagation()"></iframe>
                 </div>
             </div>
             """
@@ -1580,7 +1585,20 @@ def pair_detail(pair):
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             // show requested tab
             const t = document.getElementById(tabId);
-            if (t) t.style.display = 'block';
+            if (t) {
+                t.style.display = 'block';
+                // Lazy-load any iframe thumbnails inside this tab
+                t.querySelectorAll('iframe[data-src]').forEach(iframe => {
+                    try {
+                        if (!iframe.src || iframe.src === 'about:blank') {
+                            iframe.src = iframe.getAttribute('data-src');
+                            iframe.setAttribute('data-loaded', '1');
+                        }
+                    } catch (e) {
+                        console.warn('Failed to lazy-load iframe', e);
+                    }
+                });
+            }
             // mark button active
             if (btn) btn.classList.add('active');
         }
@@ -1643,7 +1661,6 @@ def pair_detail(pair):
     </script>
     
     <hr>
-    <a href="/" class="back-link">← Back to Dashboard</a>
     <div style="text-align:center; margin:20px 0;">
         <a href="/" class="back-btn">← Back to Dashboard</a>
     </div>

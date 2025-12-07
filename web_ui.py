@@ -1013,7 +1013,7 @@ def pair_details(pair: str):
         html += f"""
         <div class='equity-card clickable' onclick="openModal('{chart_file}', '{chart_label}')">
             <h4>{chart_label}</h4>
-            <iframe src="/chart/{chart_file}" onclick="event.stopPropagation()"></iframe>
+            <iframe data-src="/chart/{chart_file}" src="about:blank" onclick="event.stopPropagation()"></iframe>
         </div>
         """
 
@@ -1038,7 +1038,15 @@ def pair_details(pair: str):
             const modal = document.getElementById('chartModal');
             const iframe = document.getElementById('modalIframe');
             const title = document.getElementById('modalTitle');
-            
+            // lazy-load thumbnail iframe if present
+            try {
+                const thumb = document.querySelector('iframe[data-src="/chart/' + chartFile + '"]');
+                if (thumb && (!thumb.src || thumb.src === 'about:blank')) {
+                    thumb.src = thumb.getAttribute('data-src');
+                    thumb.setAttribute('data-loaded', '1');
+                }
+            } catch(e) { console.warn('thumb load', e); }
+
             iframe.src = '/chart/' + chartFile;
             title.textContent = chartLabel + ' - Full View';
             modal.style.display = 'block';
