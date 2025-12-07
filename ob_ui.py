@@ -53,16 +53,31 @@ _build_state = {
     "last_error": None,
 }
 
-# Database pairs (mirrored from ichimoku_backtest)
-FOREX_PAIRS = [
+# Database pairs (can be overridden by `pairs.json` in the repo root)
+DEFAULT_FOREX_PAIRS = [
     "EUR_USD_daily", "GBP_USD_daily", "AUD_USD_daily",
     "USD_CAD_daily", "USD_JPY_daily",
 ]
-STOCK_PAIRS = ["AAPL_daily", "MSFT_daily", "GOOGL_daily", "AMZN_daily", "NVDA_daily"]
-COMMODITY_PAIRS = [
+DEFAULT_STOCK_PAIRS = ["AAPL_daily", "MSFT_daily", "GOOGL_daily", "AMZN_daily", "NVDA_daily"]
+DEFAULT_COMMODITY_PAIRS = [
     "GC_F_daily", "CL_F_daily", "NG_F_daily",
     "HG_F_daily", "SI_F_daily"
 ]
+
+def _load_pairs_from_json(path='pairs.json'):
+    try:
+        import json
+        with open(path, 'r') as f:
+            data = json.load(f)
+        forex = data.get('FOREX_PAIRS', DEFAULT_FOREX_PAIRS)
+        stocks = data.get('STOCK_PAIRS', DEFAULT_STOCK_PAIRS)
+        commodities = data.get('COMMODITY_PAIRS', DEFAULT_COMMODITY_PAIRS)
+        return forex, stocks, commodities
+    except Exception:
+        return DEFAULT_FOREX_PAIRS, DEFAULT_STOCK_PAIRS, DEFAULT_COMMODITY_PAIRS
+
+
+FOREX_PAIRS, STOCK_PAIRS, COMMODITY_PAIRS = _load_pairs_from_json()
 ALL_PAIRS = FOREX_PAIRS + STOCK_PAIRS + COMMODITY_PAIRS
 
 
