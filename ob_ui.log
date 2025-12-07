@@ -1,0 +1,24 @@
+nohup: ignoring input
+🔷 Starting OB UI server on http://127.0.0.1:5001
+ * Serving Flask app 'ob_ui'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5001
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 766-405-245
+127.0.0.1 - - [07/Dec/2025 07:47:47] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:47:48] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [07/Dec/2025 07:47:58] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:49:27] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:51:18] "GET / HTTP/1.1" 200 -
+ * Detected change in '/workspaces/AVV/ob_ui.py', reloading
+🔷 Starting OB UI server on http://127.0.0.1:5001
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 766-405-245
+127.0.0.1 - - [07/Dec/2025 07:52:57] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:53:19] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:53:30] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:53:38] "GET /pair/GBP_USD_daily HTTP/1.1" 200 -
