@@ -668,6 +668,203 @@ def plot_ob_signals(df: pd.DataFrame, ob: pd.DataFrame, pair_name: str = "") -> 
     return fig
 
 
+def plot_equity_curve(trades: pd.DataFrame, pair_name: str = "") -> go.Figure:
+    """
+    Create cumulative P&L equity curve from trades.
+    
+    Args:
+        trades: DataFrame with outcome_R column
+        pair_name: Name of pair for title
+    
+    Returns:
+        Plotly Figure
+    """
+    if trades.empty:
+        fig = go.Figure()
+        fig.add_annotation(text="No trades to plot", showarrow=False)
+        return fig
+    
+    # Calculate cumulative P&L
+    trades_copy = trades.copy()
+    trades_copy["cumulative_R"] = trades_copy["outcome_R"].cumsum()
+    trades_copy["trade_number"] = range(1, len(trades_copy) + 1)
+    
+    fig = go.Figure()
+    
+    # Equity curve
+    fig.add_trace(go.Scatter(
+        x=trades_copy["trade_number"],
+        y=trades_copy["cumulative_R"],
+        mode="lines+markers",
+        name="Cumulative P&L",
+        line=dict(color="#667eea", width=3),
+        marker=dict(size=8),
+        fill="tozeroy",
+        fillcolor="rgba(102, 126, 234, 0.2)",
+        hovertemplate="Trade %{x}<br>Cumulative P&L: %{y:.2f}R<extra></extra>"
+    ))
+    
+    # Breakeven line
+    fig.add_hline(y=0, line_dash="dash", line_color="gray", annotation_text="Breakeven")
+    
+    fig.update_layout(
+        title=f"Equity Curve – {pair_name}",
+        xaxis_title="Trade Number",
+        yaxis_title="Cumulative P&L (R-Multiples)",
+        hovermode="x unified",
+        template="plotly_white",
+        width=1000,
+        height=600,
+        showlegend=True,
+    )
+    
+    return fig
+
+
+def generate_analysis_text(stats: dict, trades: pd.DataFrame, pair_name: str = "") -> str:
+    """
+    Generate human-readable analysis of backtest results.
+    
+    Args:
+        stats: Dictionary with trades, wins, losses, total_pnl, win_rate, avg_r
+        trades: DataFrame with trade details
+        pair_name: Name of pair
+    
+    Returns:
+        HTML string with analysis
+    """
+    if stats.get("trades", 0) == 0:
+        return """
+        <div class="analysis-section">
+            <h3>📊 Analysis</h3>
+            <p><strong>Result:</strong> No trades generated from OB signals.</p>
+            <p>The Order Block strategy did not detect any valid entry opportunities within the test period.</p>
+        </div>
+        """
+    
+    trades_count = stats.get("trades", 0)
+    wins = stats.get("wins", 0)
+    losses = stats.get("losses", 0)
+    win_rate = stats.get("win_rate", 0)
+    total_pnl = stats.get("total_pnl", 0)
+    avg_r = stats.get("avg_r", 0)
+    
+    # Determine strategy quality
+    quality_verdict = "❌ POOR"
+    quality_desc = "This strategy underperformed."
+    
+    if win_rate >= 60 and avg_r > 0.5:
+        quality_verdict = "✅ EXCELLENT"
+        quality_desc = "Outstanding performance with high win rate and positive expectancy."
+    elif win_rate >= 55 and avg_r > 0.2:
+        quality_verdict = "✅ GOOD"
+        quality_desc = "Solid performance with above-breakeven expectancy."
+    elif win_rate >= 50 and avg_r > 0:
+        quality_verdict = "⚠️ ACCEPTABLE"
+        quality_desc = "Marginally profitable with potential after optimization."
+    elif win_rate >= 45 and avg_r > -0.2:
+        quality_verdict = "⚠️ MARGINAL"
+        quality_desc = "Near-breakeven results. Consider parameter adjustments."
+    else:
+        quality_verdict = "❌ POOR"
+        quality_desc = "Losing strategy. Requires significant optimization or reconsideration."
+    
+    # Win/Loss analysis
+    win_loss_insight = f"With {wins} wins and {losses} losses out of {trades_count} trades"
+    if losses == 0:
+        win_loss_insight += ", the strategy maintained a PERFECT record (100% wins)."
+    elif wins == 0:
+        win_loss_insight += ", the strategy experienced consistent losses (0% wins)."
+    else:
+        win_loss_insight += f", the win rate of {win_rate:.1f}% is "
+        if win_rate >= 55:
+            win_loss_insight += "above the 50% breakeven threshold, which is positive."
+        elif win_rate >= 50:
+            win_loss_insight += "at the breakeven threshold, indicating marginal edge."
+        else:
+            win_loss_insight += "below 50%, meaning losses outweigh wins in frequency."
+    
+    # R-multiple analysis
+    if avg_r > 0:
+        r_insight = f"The strategy averages {avg_r:.2f}R per trade, which is positive and indicates"
+        if avg_r > 1.0:
+            r_insight += " strong risk-adjusted returns. Excellent expectancy."
+        elif avg_r > 0.5:
+            r_insight += " good risk-adjusted returns. Solid expectancy."
+        else:
+            r_insight += " weak but positive risk-adjusted returns."
+    else:
+        r_insight = f"The strategy loses {abs(avg_r):.2f}R per trade on average, indicating negative expectancy."
+    
+    # Total P&L assessment
+    pnl_verdict = "LOSS" if total_pnl < 0 else "PROFIT"
+    pnl_color = "red" if total_pnl < 0 else "green"
+    
+    html = f"""
+    <div class="analysis-section">
+        <h3>📊 Backtest Analysis for {pair_name}</h3>
+        
+        <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin: 15px 0;">
+            <p><strong>Overall Verdict:</strong> <span style="color: #333; font-size: 1.2em;">{quality_verdict}</span></p>
+            <p>{quality_desc}</p>
+        </div>
+        
+        <h4>📈 Performance Breakdown</h4>
+        <ul>
+            <li><strong>Total Trades:</strong> {trades_count} trades executed</li>
+            <li><strong>Win/Loss Record:</strong> {wins} wins, {losses} losses</li>
+            <li><strong>Win Rate:</strong> {win_rate:.1f}% ({win_loss_insight})</li>
+            <li><strong>Risk-Adjusted Returns:</strong> {r_insight}</li>
+            <li><strong>Total P&L:</strong> <span style="color: {pnl_color}; font-weight: bold;">{total_pnl:+.2f}R ({pnl_verdict})</span></li>
+        </ul>
+        
+        <h4>🎯 Key Insights</h4>
+        <ul>
+    """
+    
+    # Add insights based on metrics
+    if win_rate >= 60:
+        html += "<li>✅ <strong>High Win Rate:</strong> The strategy consistently picks profitable setups.</li>"
+    elif win_rate < 45:
+        html += "<li>⚠️ <strong>Low Win Rate:</strong> More than half of trades are losing. This needs investigation.</li>"
+    
+    if avg_r > 0.5:
+        html += "<li>✅ <strong>Strong Risk/Reward:</strong> Winners significantly outweigh losers in magnitude.</li>"
+    elif avg_r < 0:
+        html += "<li>❌ <strong>Negative Expectancy:</strong> Losers are larger than winners on average.</li>"
+    
+    if total_pnl > 0 and avg_r > 0:
+        html += "<li>✅ <strong>Profitable:</strong> The strategy generated positive returns with valid edge.</li>"
+    elif total_pnl > 0 and avg_r <= 0:
+        html += "<li>⚠️ <strong>Profitable by Luck:</strong> Positive total P&L but negative expectancy (unsustainable).</li>"
+    elif total_pnl <= 0:
+        html += "<li>❌ <strong>Unprofitable:</strong> The strategy resulted in losses. Optimization needed.</li>"
+    
+    # Recommendation
+    html += """
+        </ul>
+        
+        <h4>💡 Recommendation</h4>
+    """
+    
+    if quality_verdict == "✅ EXCELLENT":
+        html += "<p>✅ This is a <strong>production-ready strategy</strong> with strong historical performance. Consider forward testing and live deployment with proper position sizing.</p>"
+    elif quality_verdict == "✅ GOOD":
+        html += "<p>✅ This is a <strong>promising strategy</strong> with solid edge. Consider further optimization and validation on different market regimes.</p>"
+    elif quality_verdict == "⚠️ ACCEPTABLE":
+        html += "<p>⚠️ This strategy shows <strong>potential but needs refinement</strong>. Test parameter adjustments and validate on out-of-sample data.</p>"
+    elif quality_verdict == "⚠️ MARGINAL":
+        html += "<p>⚠️ This strategy is <strong>near-breakeven and risky</strong>. Significant optimization or redesign is recommended before live trading.</p>"
+    else:
+        html += "<p>❌ This strategy is <strong>not viable in its current form</strong>. Major revisions, parameter changes, or strategy redesign is needed.</p>"
+    
+    html += """
+    </div>
+    """
+    
+    return html
+
+
 def build_summary(cache_file: str):
     """Build OB backtest summary for all pairs and save to CSV."""
     with _build_lock:
@@ -929,14 +1126,20 @@ def pair_detail(pair):
             
             for _, trade in trades.iterrows():
                 outcome_color = "green" if trade.get("outcome_R", 0) > 0 else "red"
+                
+                # Format trade values safely
+                entry_str = f"{trade.get('entry'):.4f}" if pd.notna(trade.get('entry')) else 'N/A'
+                stop_str = f"{trade.get('stop'):.4f}" if pd.notna(trade.get('stop')) else 'N/A'
+                r_str = f"{trade.get('R'):.4f}" if pd.notna(trade.get('R')) else 'N/A'
+                
                 html += f"""
                     <tr>
                         <td>{trade.get('type', 'N/A')}</td>
                         <td>{trade.get('ob_date', 'N/A')}</td>
                         <td>{trade.get('entry_date', 'N/A')}</td>
-                        <td>{trade.get('entry', 'N/A'):.4f if pd.notna(trade.get('entry')) else 'N/A'}</td>
-                        <td>{trade.get('stop', 'N/A'):.4f if pd.notna(trade.get('stop')) else 'N/A'}</td>
-                        <td>{trade.get('R', 'N/A'):.4f if pd.notna(trade.get('R')) else 'N/A'}</td>
+                        <td>{entry_str}</td>
+                        <td>{stop_str}</td>
+                        <td>{r_str}</td>
                         <td style="color: {outcome_color}; font-weight: bold;">
                             {trade.get('outcome_R', 0):.2f}R
                         </td>
@@ -972,6 +1175,11 @@ def pair_detail(pair):
             chart_file = f"{pair}_ob_clean.html"
             fig.write_html(chart_file)
             
+            # Create equity curve
+            fig_equity = plot_equity_curve(trades, pair)
+            equity_file = f"{pair}_ob_equity.html"
+            fig_equity.write_html(equity_file)
+            
             html += f"""
             <h2>Charts</h2>
             <div class="equity-grid">
@@ -979,8 +1187,16 @@ def pair_detail(pair):
                     <h4>📊 OB Detection Chart</h4>
                     <iframe src="/chart/{chart_file}" onclick="event.stopPropagation()"></iframe>
                 </div>
+                <div class="equity-card clickable" onclick="openModal('{equity_file}', 'Equity Curve')">
+                    <h4>📈 Equity Curve</h4>
+                    <iframe src="/chart/{equity_file}" onclick="event.stopPropagation()"></iframe>
+                </div>
             </div>
             """
+            
+            # Add analysis text
+            analysis_html = generate_analysis_text(stats, trades, pair)
+            html += analysis_html
         
         except Exception as e:
             print(f"Chart generation error for {pair}: {e}")
