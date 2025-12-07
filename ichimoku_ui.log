@@ -183,3 +183,16 @@ Running Ichimoku Backtest: USD_CAD_daily
 127.0.0.1 - - [07/Dec/2025 10:40:36] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
 127.0.0.1 - - [07/Dec/2025 10:40:36] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
 127.0.0.1 - - [07/Dec/2025 10:40:37] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
+ * Detected change in '/workspaces/AVV/ob_ui.py', reloading
+
+✅ Backtest Results for USD_CAD_daily:
+   Return: -74.88%
+   Max Drawdown: -88.43%
+   Win Rate: 37.97%
+   # Trades: 79
+   Exposure Time: 25.08%
+✅ Equity chart saved to USD_CAD_daily_equity.html
+✅ Chart saved to USD_CAD_daily_clean.html
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 122-460-143
