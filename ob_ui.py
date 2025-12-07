@@ -1046,6 +1046,147 @@ def plot_traded_positions(trades: pd.DataFrame, df: pd.DataFrame, pair_name: str
     return fig
 
 
+def plot_bokeh_candlestick(df: pd.DataFrame, trades: pd.DataFrame = None, pair_name: str = "") -> str:
+    """
+    Create an interactive Bokeh candlestick chart with optional trade markers.
+    
+    Args:
+        df: Price DataFrame with datetime index and open/high/low/close columns
+        trades: Optional DataFrame with trade entries/exits
+        pair_name: Name of pair for title
+    
+    Returns:
+        HTML string embedded with Bokeh chart (div + script)
+    """
+    from bokeh.plotting import figure, output_file, save
+    from bokeh.models import HoverTool, CrosshairTool
+    from bokeh.transform import transform
+    import pandas as pd
+    from datetime import datetime, timedelta
+    
+    try:
+        # Reset index if needed
+        if df.index.name == 'date' or isinstance(df.index, pd.DatetimeIndex):
+            df_copy = df.reset_index()
+            if 'date' in df_copy.columns:
+                df_copy.rename(columns={'date': 'datetime'}, inplace=True)
+            elif 'datetime' not in df_copy.columns:
+                df_copy['datetime'] = df.index
+        else:
+            df_copy = df.copy()
+            if 'datetime' not in df_copy.columns:
+                df_copy['datetime'] = range(len(df_copy))
+        
+        # Calculate width for candles (in milliseconds or index units)
+        w = 0.6
+        
+        # Determine if x-axis is dates or numeric
+        is_date = isinstance(df_copy['datetime'].iloc[0] if len(df_copy) > 0 else None, (pd.Timestamp, datetime))
+        
+        if is_date:
+            # Convert to numeric for Bokeh
+            df_copy['x'] = (df_copy['datetime'] - df_copy['datetime'].min()).dt.total_seconds() / 86400.0
+        else:
+            df_copy['x'] = range(len(df_copy))
+        
+        # Determine colors
+        df_copy['color'] = ['green' if close >= open_ else 'red' 
+                            for close, open_ in zip(df_copy['close'], df_copy['open'])]
+        
+        # Create figure
+        p = figure(
+            title=f"Candlestick Chart – {pair_name}",
+            x_axis_label='Time',
+            y_axis_label='Price',
+            width=1000,
+            height=600,
+            toolbar_location='right',
+            tools='pan,wheel_zoom,box_zoom,reset,save'
+        )
+        
+        # Add candles (high-low lines)
+        p.segment(df_copy['x'], df_copy['high'], df_copy['x'], df_copy['low'], 
+                  line_color='black', line_width=1)
+        
+        # Add candle bodies (open-close)
+        p.vbar(x=df_copy['x'], width=w, top=df_copy['close'], bottom=df_copy['open'],
+               fill_color=df_copy['color'], line_color='black', legend_label='OHLC')
+        
+        # Add hover tool
+        hover = HoverTool(tooltips=[
+            ('Time', '@datetime{%F}'),
+            ('Open', '@open{0.0000}'),
+            ('High', '@high{0.0000}'),
+            ('Low', '@low{0.0000}'),
+            ('Close', '@close{0.0000}'),
+        ], formatters={'@datetime': 'datetime'}) if is_date else HoverTool(tooltips=[
+            ('Index', '@x'),
+            ('Open', '@open{0.0000}'),
+            ('High', '@high{0.0000}'),
+            ('Low', '@low{0.0000}'),
+            ('Close', '@close{0.0000}'),
+        ])
+        
+        p.add_tools(hover, CrosshairTool())
+        
+        # Add trade markers if provided
+        if trades is not None and not trades.empty:
+            for idx, trade in trades.iterrows():
+                entry_date = trade.get('entry_date') or trade.get('entryTime')
+                exit_date = trade.get('exit_date') or trade.get('exitTime')
+                entry_price = trade.get('entry')
+                exit_price = trade.get('exit') or trade.get('exit_price')
+                outcome = trade.get('outcome_R', 0)
+                
+                # Try to match dates in df_copy
+                try:
+                    if entry_date is not None and entry_price is not None:
+                        if is_date:
+                            entry_date = pd.to_datetime(entry_date)
+                            matched = df_copy[df_copy['datetime'] == entry_date]
+                            if not matched.empty:
+                                x_entry = matched.iloc[0]['x']
+                            else:
+                                continue
+                        else:
+                            x_entry = entry_date if isinstance(entry_date, (int, float)) else idx
+                        
+                        color = 'green' if outcome >= 0 else 'red'
+                        p.scatter(x=x_entry, y=entry_price, size=12, marker='triangle_up', color=color, 
+                                   legend_label='Entry' if idx == 0 else '')
+                    
+                    if exit_date is not None and exit_price is not None:
+                        if is_date:
+                            exit_date = pd.to_datetime(exit_date)
+                            matched = df_copy[df_copy['datetime'] == exit_date]
+                            if not matched.empty:
+                                x_exit = matched.iloc[0]['x']
+                            else:
+                                continue
+                        else:
+                            x_exit = exit_date if isinstance(exit_date, (int, float)) else idx
+                        
+                        color = 'green' if outcome >= 0 else 'red'
+                        p.circle(x=x_exit, y=exit_price, size=10, color=color, 
+                                legend_label='Exit' if idx == 0 else '')
+                except Exception:
+                    pass
+        
+        p.legend.location = 'top_left'
+        p.legend.click_policy = 'hide'
+        
+        # Export to HTML string
+        from bokeh.embed import file_html
+        from bokeh.resources import CDN
+        
+        html_str = file_html(p, CDN, title=f"{pair_name} Chart")
+        
+        return html_str
+    
+    except Exception as e:
+        return f"<div style='padding:20px;color:red;'><strong>Bokeh Chart Error:</strong> {str(e)}</div>"
+
+
 def generate_analysis_text(stats: dict, trades: pd.DataFrame, pair_name: str = "") -> str:
     """
     Generate human-readable analysis of backtest results.
@@ -1572,6 +1713,7 @@ def pair_detail(pair):
                     <button class="tab-btn active" onclick="showTab('tab-summary', this)">Summary</button>
                     <button class="tab-btn" onclick="showTab('tab-trades', this)">Trades</button>
                     <button class="tab-btn" onclick="showTab('tab-plots', this)">Plots</button>
+                    <button class="tab-btn" onclick="showTab('tab-bokeh', this)">Interactive</button>
                     <button class="tab-btn" onclick="showTab('tab-analysis', this)">Analysis</button>
                 </div>
 
@@ -1695,6 +1837,13 @@ def pair_detail(pair):
             equity_file = f"{pair}_ob_equity.html"
             fig_equity.write_html(equity_file)
 
+            # Create Bokeh candlestick chart
+            bokeh_html = ""
+            try:
+                bokeh_html = plot_bokeh_candlestick(df, trades, pair)
+            except Exception as e:
+                bokeh_html = f"<div style='padding:20px;color:red;'><strong>Bokeh Error:</strong> {str(e)}</div>"
+
             # Helper to get file metadata
             def _file_meta(path: str) -> str:
                 try:
@@ -1736,8 +1885,13 @@ def pair_detail(pair):
             
             # Add analysis text (place it in the Analysis tab)
             analysis_html = generate_analysis_text(stats, trades, pair)
-            # close the plots tab content and open analysis tab
-            html += """
+            # close the plots tab content and add bokeh tab and analysis tab
+            html += f"""
+            </div>
+            <div class="tab-content" id="tab-bokeh" style="display:none">
+            <h2>Interactive Candlestick Chart</h2>
+            <p style="margin:12px 0;font-size:0.9em;color:#999;">Hover over candles to view OHLC data. Pan, zoom, and toggle entry/exit markers using the toolbar.</p>
+            {bokeh_html}
             </div>
             <div class="tab-content" id="tab-analysis" style="display:none">
             """
