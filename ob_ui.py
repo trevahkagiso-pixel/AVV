@@ -1308,7 +1308,10 @@ def index():
                     <h1>🔷 Order Block Strategy</h1>
                     <p>Advanced price-action backtest dashboard</p>
                 </div>
-                <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <a href="/admin/pairs" class="btn secondary" style="padding:8px 12px;font-size:0.9em;">⚙️ Admin</a>
+                    <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+                </div>
             </header>
             
             <h2>Dashboard Summary</h2>

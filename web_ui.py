@@ -785,9 +785,12 @@ def index():
     html = get_base_css()
     html += """
     <div class="container">
-        <header>
-            <h1>📊 Ichimoku Backtest Dashboard</h1>
-            <p style="color: #999; margin-top: 10px;">Real-time FX & Stock trading strategy analysis and equity curve visualization</p>
+        <header style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+                <h1>📊 Ichimoku Backtest Dashboard</h1>
+                <p style="color: #999; margin-top: 10px;">Real-time FX & Stock trading strategy analysis and equity curve visualization</p>
+            </div>
+            <a href="/admin/pairs" class="btn secondary" style="padding:8px 12px;font-size:0.9em;align-self:center;margin-top:10px;">⚙️ Admin</a>
         </header>
         <div class="tab-nav">
             <button class="tab-btn active" onclick="showTab('forex')">Forex Results</button>
@@ -957,6 +960,89 @@ def build_status():
     html += '<p><a href="/" class="back-link">← Back to Dashboard</a></p>'
     html += '</div>'
     return html
+
+
+@APP.route('/admin/pairs', methods=['GET', 'POST'])
+def admin_pairs():
+    """Admin UI to view/edit `pairs.json` and trigger rebuilds for both UIs."""
+    try:
+        import json
+        from urllib import request as urlrequest
+        pairs_path = os.path.join(os.getcwd(), 'pairs.json')
+
+        if request.method == 'POST':
+            body = request.form.get('pairs_json', '')
+            try:
+                parsed = json.loads(body)
+            except Exception as e:
+                return f"Invalid JSON: {e}", 400
+
+            # Validation: must contain keys
+            for k in ('FOREX_PAIRS', 'STOCK_PAIRS', 'COMMODITY_PAIRS'):
+                if k not in parsed:
+                    return f"Missing key: {k}", 400
+
+            # Write file
+            with open(pairs_path, 'w') as fh:
+                json.dump(parsed, fh, indent=2)
+
+            # Reload pairs in this app
+            global FOREX_PAIRS, STOCK_PAIRS, COMMODITY_PAIRS, ALL_PAIRS
+            FOREX_PAIRS, STOCK_PAIRS, COMMODITY_PAIRS = _load_pairs_from_json()
+            ALL_PAIRS = FOREX_PAIRS + STOCK_PAIRS + COMMODITY_PAIRS
+
+            # Start Ichimoku build in background thread
+            def _start_ichimoku_build():
+                try:
+                    build_summary(CACHE_FILE)
+                except Exception:
+                    pass
+
+            t = threading.Thread(target=_start_ichimoku_build, daemon=True)
+            t.start()
+
+            # Trigger OB UI rebuild (best-effort)
+            try:
+                url = 'http://127.0.0.1:5001/admin/pairs'
+                data = {'pairs_json': json.dumps(parsed)}.items()
+                body_str = '&'.join([f'{k}={v}' for k, v in data])
+                req = urlrequest.Request(url, data=body_str.encode('utf-8'), method='POST')
+                urlrequest.urlopen(req, timeout=2)
+            except Exception:
+                pass
+
+            return redirect('/admin/pairs')
+
+        # GET: load and display
+        if os.path.exists(pairs_path):
+            with open(pairs_path, 'r') as fh:
+                content = fh.read()
+        else:
+            default = {
+                'FOREX_PAIRS': list(FOREX_PAIRS) if FOREX_PAIRS else [],
+                'STOCK_PAIRS': list(STOCK_PAIRS) if STOCK_PAIRS else [],
+                'COMMODITY_PAIRS': list(COMMODITY_PAIRS) if COMMODITY_PAIRS else [],
+            }
+            content = json.dumps(default, indent=2)
+
+        html = get_base_css()
+        html += """
+        <div class="container">
+            <header>
+                <h1>🔧 Admin — Edit pairs.json</h1>
+            </header>
+            <form method="post">
+                <p>Edit the JSON below to add/remove pairs. Keys required: <code>FOREX_PAIRS</code>, <code>STOCK_PAIRS</code>, <code>COMMODITY_PAIRS</code>.</p>
+                <textarea name="pairs_json" style="width:100%;height:360px;font-family:monospace;">""" + content + """</textarea>
+                <div style="margin-top:12px"><button class="btn" type="submit">💾 Save & Rebuild Both UIs</button> <a class="btn secondary" href="/">Back</a></div>
+            </form>
+            <p style="margin-top:16px;font-size:0.9em;color:#666">Note: Saving will update pairs.json, reload pairs in memory, and trigger builds in both Ichimoku (5000) and OB (5001) UIs.</p>
+        </div>
+        """
+        return html
+
+    except Exception as e:
+        return f"Admin error: {e}", 500
 
 
 @APP.route("/pair/<pair>")
