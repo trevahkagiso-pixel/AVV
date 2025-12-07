@@ -436,3 +436,8 @@ Starting web server on http://127.0.0.1:5000
 127.0.0.1 - - [07/Dec/2025 08:06:35] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
 127.0.0.1 - - [07/Dec/2025 08:06:35] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
 127.0.0.1 - - [07/Dec/2025 08:06:35] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
+ * Detected change in '/workspaces/AVV/ob_ui.py', reloading
+Starting web server on http://127.0.0.1:5000
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 766-405-245
