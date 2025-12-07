@@ -13,3 +13,8 @@ Press CTRL+C to quit
 127.0.0.1 - - [07/Dec/2025 08:29:32] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
 127.0.0.1 - - [07/Dec/2025 08:29:35] "GET /chart/EUR_USD_daily_ob_clean.html HTTP/1.1" 200 -
 127.0.0.1 - - [07/Dec/2025 08:29:35] "GET /chart/EUR_USD_daily_ob_equity.html HTTP/1.1" 200 -
+ * Detected change in '/workspaces/AVV/ichimoku.py', reloading
+🔷 Starting OB UI server on http://127.0.0.1:5001
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 766-405-245
