@@ -1,5 +1,5 @@
 nohup: ignoring input
-/workspaces/AVV/ob_ui.py:1450: SyntaxWarning: invalid escape sequence '\('
+/workspaces/AVV/ob_ui.py:1562: SyntaxWarning: invalid escape sequence '\('
   html += """
 🔷 Starting OB UI server on http://127.0.0.1:5001
  * Serving Flask app 'ob_ui'
@@ -8,24 +8,28 @@ WARNING: This is a development server. Do not use it in a production deployment.
  * Running on http://127.0.0.1:5001
 Press CTRL+C to quit
  * Restarting with stat
-/workspaces/AVV/ob_ui.py:1450: SyntaxWarning: invalid escape sequence '\('
+/workspaces/AVV/ob_ui.py:1562: SyntaxWarning: invalid escape sequence '\('
   html += """
  * Debugger is active!
  * Debugger PIN: 122-460-143
-127.0.0.1 - - [07/Dec/2025 10:18:42] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 10:18:58] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 10:19:14] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 10:19:30] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 10:20:11] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 10:20:27] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 10:20:30] "GET /chart/EUR_USD_daily_ob_equity.html HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 10:20:30] "GET /chart/EUR_USD_daily_ob_trades.html HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 10:20:30] "GET /chart/EUR_USD_daily_ob_clean.html HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 10:21:32] "GET / HTTP/1.1" 200 -
- * Detected change in '/workspaces/AVV/web_ui.py', reloading
-🔷 Starting OB UI server on http://127.0.0.1:5001
- * Restarting with stat
-/workspaces/AVV/ob_ui.py:1450: SyntaxWarning: invalid escape sequence '\('
-  html += """
- * Debugger is active!
- * Debugger PIN: 122-460-143
+127.0.0.1 - - [07/Dec/2025 10:34:35] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:34:46] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:35:04] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:35:28] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:36:30] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:37:35] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:37:39] "GET /chart/EUR_USD_daily_ob_clean.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:37:39] "GET /chart/EUR_USD_daily_ob_trades.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:37:39] "GET /chart/EUR_USD_daily_ob_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:38:01] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:39:00] "GET /pair/GC_F_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:39:01] "GET /chart/GC_F_daily_ob_clean.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:39:03] "GET /chart/GC_F_daily_ob_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:39:03] "GET /chart/GC_F_daily_ob_trades.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:39:12] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:41:03] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:41:07] "GET /chart/EUR_USD_daily_ob_trades.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:41:07] "GET /chart/EUR_USD_daily_ob_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:41:07] "GET /chart/EUR_USD_daily_ob_clean.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:42:37] "GET /chart/EUR_USD_daily_ob_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:43:04] "GET /chart/EUR_USD_daily_ob_clean.html HTTP/1.1" 304 -

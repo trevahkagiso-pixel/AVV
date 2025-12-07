@@ -1118,6 +1118,17 @@ def index():
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Order Block Strategy – Dashboard</title>
         {get_base_css()}
+        <style>
+            /* Category tabs on dashboard */
+            .category-tabs {{ display:flex; gap:8px; margin:12px 0; }}
+            .category-btn {{ padding:8px 12px; border-radius:6px; background:#222; color:#ddd; border:1px solid #333; cursor:pointer; }}
+            .category-btn.active {{ background:#7b3be6; color:#fff; }}
+            .category-pane {{ display:none; margin-top:12px; }}
+            .category-pane.active {{ display:block; }}
+            /* Analysis section dark-mode compatible font/color */
+            .analysis-section {{ color: #222; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }}
+            .dark-mode .analysis-section {{ color: #e0e0e0; }}
+        </style>
     </head>
     <body>
         <div class="container">
@@ -1178,40 +1189,141 @@ def index():
             </div>
             
             <h2>Pair Performance</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Pair</th>
-                        <th>Trades</th>
-                        <th>Wins</th>
-                        <th>Losses</th>
-                        <th>Win Rate</th>
-                        <th>Total P&L</th>
-                        <th>Avg R</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div class="category-tabs">
+                <button class="category-btn active" onclick="showCategory('cat-forex', this)">Forex</button>
+                <button class="category-btn" onclick="showCategory('cat-stocks', this)">Stocks</button>
+                <button class="category-btn" onclick="showCategory('cat-commodities', this)">Commodities</button>
+            </div>
+
+            <div id="cat-forex" class="category-pane active">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pair</th>
+                            <th>Trades</th>
+                            <th>Wins</th>
+                            <th>Losses</th>
+                            <th>Win Rate</th>
+                            <th>Total P&L</th>
+                            <th>Avg R</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
             """
-            
+
+            # build category lists
+            stocks = ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA"]
+            commodities = ["GC_F", "CL_F", "NG_F", "HG_F", "SI_F"]
+
+            # Forex pane rows (exclude stocks & commodities)
             for _, row in df.iterrows():
                 pair = row["pair"]
+                if any(s in pair for s in stocks) or any(c in pair for c in commodities):
+                    continue
                 html += f"""
-                    <tr>
-                        <td><strong>{pair}</strong></td>
-                        <td>{int(row['trades'])}</td>
-                        <td style="color: green;">{int(row['wins'])}</td>
-                        <td style="color: red;">{int(row['losses'])}</td>
-                        <td>{row['win_rate']:.1f}%</td>
-                        <td style="color: {'green' if row['total_pnl'] > 0 else 'red'};">{row['total_pnl']:.2f}R</td>
-                        <td>{row['avg_r']:.2f}R</td>
-                        <td><a href="/pair/{pair}">View Details →</a></td>
-                    </tr>
+                        <tr>
+                            <td><strong>{pair}</strong></td>
+                            <td>{int(row['trades'])}</td>
+                            <td style=\"color: green;\">{int(row['wins'])}</td>
+                            <td style=\"color: red;\">{int(row['losses'])}</td>
+                            <td>{row['win_rate']:.1f}%</td>
+                            <td style=\"color: {'green' if row['total_pnl'] > 0 else 'red'};\">{row['total_pnl']:.2f}R</td>
+                            <td>{row['avg_r']:.2f}R</td>
+                            <td><a href=\"/pair/{pair}\">View Details →</a></td>
+                        </tr>
                 """
-            
+
             html += """
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="cat-stocks" class="category-pane">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pair</th>
+                            <th>Trades</th>
+                            <th>Wins</th>
+                            <th>Losses</th>
+                            <th>Win Rate</th>
+                            <th>Total P&L</th>
+                            <th>Avg R</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            """
+
+            for _, row in df.iterrows():
+                pair = row["pair"]
+                if any(s in pair for s in stocks):
+                    html += f"""
+                        <tr>
+                            <td><strong>{pair}</strong></td>
+                            <td>{int(row['trades'])}</td>
+                            <td style=\"color: green;\">{int(row['wins'])}</td>
+                            <td style=\"color: red;\">{int(row['losses'])}</td>
+                            <td>{row['win_rate']:.1f}%</td>
+                            <td style=\"color: {'green' if row['total_pnl'] > 0 else 'red'};\">{row['total_pnl']:.2f}R</td>
+                            <td>{row['avg_r']:.2f}R</td>
+                            <td><a href=\"/pair/{pair}\">View Details →</a></td>
+                        </tr>
+                    """
+
+            html += """
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="cat-commodities" class="category-pane">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pair</th>
+                            <th>Trades</th>
+                            <th>Wins</th>
+                            <th>Losses</th>
+                            <th>Win Rate</th>
+                            <th>Total P&L</th>
+                            <th>Avg R</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            """
+
+            for _, row in df.iterrows():
+                pair = row["pair"]
+                if any(c in pair for c in commodities):
+                    html += f"""
+                        <tr>
+                            <td><strong>{pair}</strong></td>
+                            <td>{int(row['trades'])}</td>
+                            <td style=\"color: green;\">{int(row['wins'])}</td>
+                            <td style=\"color: red;\">{int(row['losses'])}</td>
+                            <td>{row['win_rate']:.1f}%</td>
+                            <td style=\"color: {'green' if row['total_pnl'] > 0 else 'red'};\">{row['total_pnl']:.2f}R</td>
+                            <td>{row['avg_r']:.2f}R</td>
+                            <td><a href=\"/pair/{pair}\">View Details →</a></td>
+                        </tr>
+                    """
+
+            html += """
+                    </tbody>
+                </table>
+            </div>
+
+            <script>
+                function showCategory(id, btn) {{
+                    document.querySelectorAll('.category-pane').forEach(p => p.classList.remove('active'));
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    const el = document.getElementById(id);
+                    if (el) el.classList.add('active');
+                    if (btn) btn.classList.add('active');
+                }}
+            </script>
             """
         
         except Exception as e:
@@ -1532,6 +1644,9 @@ def pair_detail(pair):
     
     <hr>
     <a href="/" class="back-link">← Back to Dashboard</a>
+    <div style="text-align:center; margin:20px 0;">
+        <a href="/" class="back-btn">← Back to Dashboard</a>
+    </div>
     <footer>Order Block Strategy UI • Powered by Python, Flask & Plotly</footer>
     </div>
     """

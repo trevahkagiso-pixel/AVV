@@ -112,3 +112,74 @@ Starting web server on http://127.0.0.1:5000
  * Restarting with stat
  * Debugger is active!
  * Debugger PIN: 122-460-143
+ * Detected change in '/workspaces/AVV/ob_ui.py', reloading
+Starting web server on http://127.0.0.1:5000
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 122-460-143
+ * Detected change in '/workspaces/AVV/ob_ui.py', reloading
+Starting web server on http://127.0.0.1:5000
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 122-460-143
+ * Detected change in '/workspaces/AVV/ob_ui.py', reloading
+Starting web server on http://127.0.0.1:5000
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 122-460-143
+ * Detected change in '/workspaces/AVV/ob_ui.py', reloading
+Starting web server on http://127.0.0.1:5000
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 122-460-143
+ * Detected change in '/workspaces/AVV/ob_ui.py', reloading
+Starting web server on http://127.0.0.1:5000
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 122-460-143
+127.0.0.1 - - [07/Dec/2025 10:37:36] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:37:38] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:37:38] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:37:38] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:37:38] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:37:39] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:37:39] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:37:39] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:40:09] "GET /pair/AVERAGE_daily HTTP/1.1" 400 -
+127.0.0.1 - - [07/Dec/2025 10:40:14] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:40:14] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:40:15] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:40:16] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:40:16] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:40:16] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:40:16] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:40:16] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
+Starting web server on http://127.0.0.1:5000
+
+======================================================================
+Running Ichimoku Backtest: AVERAGE_daily
+======================================================================
+📊 Fetching AVERAGE_daily from database...
+
+======================================================================
+Running Ichimoku Backtest: USD_CAD_daily
+======================================================================
+📊 Fetching USD_CAD_daily from database...
+   Loaded 5000 rows
+📈 Adding Ichimoku Cloud indicators...
+📈 Adding EMA trend filter (length=100)...
+📊 Creating Ichimoku + EMA signals...
+   4949 rows after dropping NaN
+🎯 Running backtest with 4949 candles...
+Backtest.run:   0%|          | 0/4948 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [07/Dec/2025 10:40:26] "GET /pair/USD_CAD_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:40:26] "GET /chart/USD_CAD_daily_clean.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:40:26] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:40:26] "GET /chart/USD_CAD_daily_ichimoku.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:40:34] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 10:40:36] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:40:36] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:40:36] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:40:36] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:40:36] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:40:36] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 10:40:37] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
