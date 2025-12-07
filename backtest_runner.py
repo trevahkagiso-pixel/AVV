@@ -196,7 +196,7 @@ def register_and_run_all_strategies(pair_list: List[str] = None) -> None:
     # Optionally register variants
     registry.register('ichimoku_aggressive', create_ichimoku_strategy(ema_length=50))
     registry.register('ichimoku_conservative', create_ichimoku_strategy(ema_length=200))
-    
+
     print(f"\n{'='*70}")
     print(f"Registered Strategies:")
     print(f"{'='*70}\n")

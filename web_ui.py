@@ -892,7 +892,7 @@ def pair_details(pair: str):
         # Default to forex
         else:
             db_path = DATABASE_PATH
-        
+
         stats, df, bt = run_backtest_from_database(pair, db_path=db_path, show_plot=False)
     except Exception as e:
         html = get_base_css()
@@ -932,6 +932,7 @@ def pair_details(pair: str):
             <p style="color: #999;">Detailed backtest results and charts</p>
         </header>
     """
+    
     
     html += "<h3>📈 Performance Metrics</h3>"
     html += "<div class='stats-list'>"

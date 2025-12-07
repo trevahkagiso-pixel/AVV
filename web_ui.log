@@ -7,10 +7,51 @@ WARNING: This is a development server. Do not use it in a production deployment.
 Press CTRL+C to quit
  * Restarting with stat
  * Debugger is active!
- * Debugger PIN: 307-934-822
+ * Debugger PIN: 766-405-245
+127.0.0.1 - - [07/Dec/2025 07:23:24] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:23:46] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:23:49] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:23:49] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:23:49] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:23:49] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:23:49] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:23:49] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:23:49] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
 Starting web server on http://127.0.0.1:5000
 
 ======================================================================
+Running Ichimoku Backtest: EUR_USD_daily
+======================================================================
+📊 Fetching EUR_USD_daily from database...
+   Loaded 5000 rows
+📈 Adding Ichimoku Cloud indicators...
+📈 Adding EMA trend filter (length=100)...
+📊 Creating Ichimoku + EMA signals...
+   4949 rows after dropping NaN
+🎯 Running backtest with 4949 candles...
+Backtest.run:   0%|          | 0/4948 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [07/Dec/2025 07:24:16] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:24:17] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:24:17] "GET /chart/EUR_USD_daily_clean.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:24:18] "GET /chart/EUR_USD_daily_ichimoku.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:24:30] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:24:30] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:24:30] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:24:30] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:24:30] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:24:30] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:24:30] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:24:30] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
+
+✅ Backtest Results for EUR_USD_daily:
+   Return: -73.32%
+   Max Drawdown: -87.11%
+   Win Rate: 35.53%
+   # Trades: 76
+   Exposure Time: 20.11%
+✅ Equity chart saved to EUR_USD_daily_equity.html
+✅ Chart saved to EUR_USD_daily_clean.html
+
+======================================================================
 Running Ichimoku Backtest: GC_F_daily
 ======================================================================
 📊 Fetching GC_F_daily from database...
@@ -20,7 +61,10 @@ Running Ichimoku Backtest: GC_F_daily
 📊 Creating Ichimoku + EMA signals...
    1207 rows after dropping NaN
 🎯 Running backtest with 1207 candles...
-Backtest.run:   0%|          | 0/1206 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [06/Dec/2025 19:30:32] "GET /pair/GC_F_daily HTTP/1.1" 200 -
+Backtest.run:   0%|          | 0/1206 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [07/Dec/2025 07:24:47] "GET /pair/GC_F_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:24:48] "GET /chart/GC_F_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:24:48] "GET /chart/GC_F_daily_ichimoku.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:24:48] "GET /chart/GC_F_daily_clean.html HTTP/1.1" 200 -
 
 ✅ Backtest Results for GC_F_daily:
    Return: -49.71%
@@ -35,48 +79,6 @@ Running Ichimoku Backtest: GC_F_daily
 Running Ichimoku Backtest: GC_F_daily
 ======================================================================
 📊 Fetching GC_F_daily from database...
-   Loaded 1258 rows
-📈 Adding Ichimoku Cloud indicators...
-📈 Adding EMA trend filter (length=100)...
-📊 Creating Ichimoku + EMA signals...
-   1207 rows after dropping NaN
-🎯 Running backtest with 1207 candles...
-Backtest.run:   0%|          | 0/1206 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [06/Dec/2025 19:33:07] "GET /pair/GC_F_daily HTTP/1.1" 200 -
-
-✅ Backtest Results for GC_F_daily:
-   Return: -49.71%
-   Max Drawdown: -66.15%
-   Win Rate: 36.36%
-   # Trades: 11
-   Exposure Time: 6.46%
-✅ Equity chart saved to GC_F_daily_equity.html
-✅ Chart saved to GC_F_daily_clean.html
-
-======================================================================
-Running Ichimoku Backtest: GC_F_daily
-======================================================================
-📊 Fetching GC_F_daily from database...
-   Loaded 1258 rows
-📈 Adding Ichimoku Cloud indicators...
-📈 Adding EMA trend filter (length=100)...
-📊 Creating Ichimoku + EMA signals...
-   1207 rows after dropping NaN
-🎯 Running backtest with 1207 candles...
-Backtest.run:   0%|          | 0/1206 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [06/Dec/2025 19:33:27] "GET /pair/GC_F_daily HTTP/1.1" 200 -
-
-✅ Backtest Results for GC_F_daily:
-   Return: -49.71%
-   Max Drawdown: -66.15%
-   Win Rate: 36.36%
-   # Trades: 11
-   Exposure Time: 6.46%
-✅ Equity chart saved to GC_F_daily_equity.html
-✅ Chart saved to GC_F_daily_clean.html
-
-======================================================================
-Running Ichimoku Backtest: CL_F_daily
-======================================================================
-📊 Fetching CL_F_daily from database...
    Loaded 1258 rows
 📈 Adding Ichimoku Cloud indicators...
 📈 Adding EMA trend filter (length=100)...
@@ -87,336 +89,231 @@ Running Ichimoku Backtest: CL_F_daily
 
 Some trades remain open at the end of backtest. Use `Backtest(..., finalize_trades=True)` to close them and include them in stats.
 
-127.0.0.1 - - [06/Dec/2025 19:33:27] "GET /pair/CL_F_daily HTTP/1.1" 200 -
-
-✅ Backtest Results for CL_F_daily:
-   Return: -99.44%
-   Max Drawdown: -99.87%
-   Win Rate: 25.00%
-   # Trades: 16
-   Exposure Time: 27.17%
-✅ Equity chart saved to CL_F_daily_equity.html
-✅ Chart saved to CL_F_daily_clean.html
-
-======================================================================
-Running Ichimoku Backtest: NG_F_daily
-======================================================================
-📊 Fetching NG_F_daily from database...
-   Loaded 1259 rows
-📈 Adding Ichimoku Cloud indicators...
-📈 Adding EMA trend filter (length=100)...
-📊 Creating Ichimoku + EMA signals...
-   1208 rows after dropping NaN
-🎯 Running backtest with 1208 candles...
-Backtest.run:   0%|          | 0/1207 [00:00<?, ?bar/s]                                                       /home/codespace/.local/lib/python3.12/site-packages/backtesting/_stats.py:156: RuntimeWarning:
-
-divide by zero encountered in log
-
-127.0.0.1 - - [06/Dec/2025 19:33:28] "GET /pair/NG_F_daily HTTP/1.1" 200 -
-
-✅ Backtest Results for NG_F_daily:
-   Return: -100.00%
-   Max Drawdown: -100.00%
-   Win Rate: 66.67%
-   # Trades: 3
-   Exposure Time: 4.97%
-✅ Equity chart saved to NG_F_daily_equity.html
-✅ Chart saved to NG_F_daily_clean.html
-
-======================================================================
-Running Ichimoku Backtest: HG_F_daily
-======================================================================
-📊 Fetching HG_F_daily from database...
-   Loaded 1259 rows
-📈 Adding Ichimoku Cloud indicators...
-📈 Adding EMA trend filter (length=100)...
-📊 Creating Ichimoku + EMA signals...
-   1208 rows after dropping NaN
-🎯 Running backtest with 1208 candles...
-Backtest.run:   0%|          | 0/1207 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [06/Dec/2025 19:33:28] "GET /pair/HG_F_daily HTTP/1.1" 200 -
-
-✅ Backtest Results for HG_F_daily:
-   Return: -85.39%
-   Max Drawdown: -88.68%
-   Win Rate: 31.25%
-   # Trades: 16
-   Exposure Time: 10.51%
-✅ Equity chart saved to HG_F_daily_equity.html
-✅ Chart saved to HG_F_daily_clean.html
-
-======================================================================
-Running Ichimoku Backtest: SI_F_daily
-======================================================================
-📊 Fetching SI_F_daily from database...
-   Loaded 1258 rows
-📈 Adding Ichimoku Cloud indicators...
-📈 Adding EMA trend filter (length=100)...
-📊 Creating Ichimoku + EMA signals...
-   1207 rows after dropping NaN
-🎯 Running backtest with 1207 candles...
-Backtest.run:   0%|          | 0/1206 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [06/Dec/2025 19:33:28] "GET /pair/SI_F_daily HTTP/1.1" 200 -
-
-✅ Backtest Results for SI_F_daily:
-   Return: -80.28%
-   Max Drawdown: -94.80%
-   Win Rate: 35.29%
-   # Trades: 17
-   Exposure Time: 11.10%
-✅ Equity chart saved to SI_F_daily_equity.html
-✅ Chart saved to SI_F_daily_clean.html
-
-======================================================================
-Running Ichimoku Backtest: GC_F_daily
-======================================================================
-📊 Fetching GC_F_daily from database...
-   Loaded 1258 rows
-📈 Adding Ichimoku Cloud indicators...
-📈 Adding EMA trend filter (length=100)...
-📊 Creating Ichimoku + EMA signals...
-   1207 rows after dropping NaN
-🎯 Running backtest with 1207 candles...
-Backtest.run:   0%|          | 0/1206 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [06/Dec/2025 19:34:36] "GET /pair/GC_F_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:25:10] "GET /pair/GC_F_daily?strategy=simple HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:25:10] "GET /chart/GC_F_daily_clean.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:25:10] "GET /chart/GC_F_daily_ichimoku.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:25:10] "GET /chart/GC_F_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:25:45] "GET /chart/GC_F_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:25:58] "GET /pair/GC_F_daily?strategy=ob_refined HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:26:00] "GET /chart/GC_F_daily_clean.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:26:42] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:26:43] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:26:43] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:26:44] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:26:44] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:26:44] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:26:44] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:26:45] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
 
 ✅ Backtest Results for GC_F_daily:
-   Return: -49.71%
-   Max Drawdown: -66.15%
-   Win Rate: 36.36%
-   # Trades: 11
-   Exposure Time: 6.46%
+   Return: 280.37%
+   Max Drawdown: -96.33%
+   Win Rate: 42.15%
+   # Trades: 121
+   Exposure Time: 77.22%
 ✅ Equity chart saved to GC_F_daily_equity.html
 ✅ Chart saved to GC_F_daily_clean.html
+OB equity chart error: cannot access local variable 'pair_display' where it is not associated with a value
+✅ Chart saved to GC_F_daily_clean.html
+Ichimoku chart error: 'Missing required column: signal'
 
 ======================================================================
-Running Ichimoku Backtest: GC_F_daily
+Running Ichimoku Backtest: GBP_USD_daily
 ======================================================================
-📊 Fetching GC_F_daily from database...
-   Loaded 1258 rows
+📊 Fetching GBP_USD_daily from database...
+   Loaded 5000 rows
 📈 Adding Ichimoku Cloud indicators...
 📈 Adding EMA trend filter (length=100)...
 📊 Creating Ichimoku + EMA signals...
-   1207 rows after dropping NaN
-🎯 Running backtest with 1207 candles...
-Backtest.run:   0%|          | 0/1206 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [06/Dec/2025 19:34:43] "GET /pair/GC_F_daily HTTP/1.1" 200 -
+   4949 rows after dropping NaN
+🎯 Running backtest with 4949 candles...
+Backtest.run:   0%|          | 0/4948 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [07/Dec/2025 07:26:49] "GET /pair/GBP_USD_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:26:50] "GET /chart/GBP_USD_daily_clean.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:26:50] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:26:50] "GET /chart/GBP_USD_daily_ichimoku.html HTTP/1.1" 200 -
 
-✅ Backtest Results for GC_F_daily:
-   Return: -49.71%
-   Max Drawdown: -66.15%
-   Win Rate: 36.36%
-   # Trades: 11
-   Exposure Time: 6.46%
-✅ Equity chart saved to GC_F_daily_equity.html
-✅ Chart saved to GC_F_daily_clean.html
+✅ Backtest Results for GBP_USD_daily:
+   Return: -97.66%
+   Max Drawdown: -97.84%
+   Win Rate: 28.00%
+   # Trades: 75
+   Exposure Time: 19.20%
+✅ Equity chart saved to GBP_USD_daily_equity.html
+✅ Chart saved to GBP_USD_daily_clean.html
 
 ======================================================================
-Running Ichimoku Backtest: GC_F_daily
+Running Ichimoku Backtest: GBP_USD_daily
 ======================================================================
-📊 Fetching GC_F_daily from database...
-   Loaded 1258 rows
+📊 Fetching GBP_USD_daily from database...
+   Loaded 5000 rows
 📈 Adding Ichimoku Cloud indicators...
 📈 Adding EMA trend filter (length=100)...
 📊 Creating Ichimoku + EMA signals...
-   1207 rows after dropping NaN
-🎯 Running backtest with 1207 candles...
-Backtest.run:   0%|          | 0/1206 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [06/Dec/2025 19:34:49] "GET /pair/GC_F_daily HTTP/1.1" 200 -
+   4949 rows after dropping NaN
+🎯 Running backtest with 4949 candles...
+Backtest.run:   0%|          | 0/4948 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [07/Dec/2025 07:26:56] "GET /pair/GBP_USD_daily?strategy=simple HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:26:57] "GET /chart/GBP_USD_daily_ichimoku.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:26:57] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:26:58] "GET /chart/GBP_USD_daily_clean.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:27:17] "GET /pair/GBP_USD_daily?strategy=ob_refined HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:27:17] "GET /chart/GBP_USD_daily_clean.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:27:37] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:27:38] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:27:38] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:27:38] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:27:38] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:27:38] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:27:38] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:27:38] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
 
-✅ Backtest Results for GC_F_daily:
-   Return: -49.71%
-   Max Drawdown: -66.15%
-   Win Rate: 36.36%
-   # Trades: 11
-   Exposure Time: 6.46%
-✅ Equity chart saved to GC_F_daily_equity.html
-✅ Chart saved to GC_F_daily_clean.html
+✅ Backtest Results for GBP_USD_daily:
+   Return: -99.69%
+   Max Drawdown: -99.85%
+   Win Rate: 35.14%
+   # Trades: 313
+   Exposure Time: 83.84%
+✅ Equity chart saved to GBP_USD_daily_equity.html
+✅ Chart saved to GBP_USD_daily_clean.html
+OB equity chart error: cannot access local variable 'pair_display' where it is not associated with a value
+✅ Chart saved to GBP_USD_daily_clean.html
+Ichimoku chart error: 'Missing required column: signal'
 
 ======================================================================
-Running Ichimoku Backtest: GC_F_daily
+Running Ichimoku Backtest: USD_JPY_daily
 ======================================================================
-📊 Fetching GC_F_daily from database...
-   Loaded 1258 rows
+📊 Fetching USD_JPY_daily from database...
+   Loaded 5000 rows
 📈 Adding Ichimoku Cloud indicators...
 📈 Adding EMA trend filter (length=100)...
 📊 Creating Ichimoku + EMA signals...
-   1207 rows after dropping NaN
-🎯 Running backtest with 1207 candles...
-Backtest.run:   0%|          | 0/1206 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [06/Dec/2025 19:34:54] "GET /pair/GC_F_daily HTTP/1.1" 200 -
-
-✅ Backtest Results for GC_F_daily:
-   Return: -49.71%
-   Max Drawdown: -66.15%
-   Win Rate: 36.36%
-   # Trades: 11
-   Exposure Time: 6.46%
-✅ Equity chart saved to GC_F_daily_equity.html
-✅ Chart saved to GC_F_daily_clean.html
-
-======================================================================
-Running Ichimoku Backtest: CL_F_daily
-======================================================================
-📊 Fetching CL_F_daily from database...
-   Loaded 1258 rows
-📈 Adding Ichimoku Cloud indicators...
-📈 Adding EMA trend filter (length=100)...
-📊 Creating Ichimoku + EMA signals...
-   1207 rows after dropping NaN
-🎯 Running backtest with 1207 candles...
-Backtest.run:   0%|          | 0/1206 [00:00<?, ?bar/s]                                                       /workspaces/AVV/ichimoku_backtest.py:106: UserWarning:
+   4949 rows after dropping NaN
+🎯 Running backtest with 4949 candles...
+Backtest.run:   0%|          | 0/4948 [00:00<?, ?bar/s]                                                       /workspaces/AVV/ichimoku_backtest.py:106: UserWarning:
 
 Some trades remain open at the end of backtest. Use `Backtest(..., finalize_trades=True)` to close them and include them in stats.
 
-127.0.0.1 - - [06/Dec/2025 19:34:55] "GET /pair/CL_F_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:27:46] "GET /pair/USD_JPY_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:27:47] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:27:47] "GET /chart/USD_JPY_daily_ichimoku.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:27:47] "GET /chart/USD_JPY_daily_clean.html HTTP/1.1" 200 -
 
-✅ Backtest Results for CL_F_daily:
-   Return: -99.44%
-   Max Drawdown: -99.87%
-   Win Rate: 25.00%
-   # Trades: 16
-   Exposure Time: 27.17%
-✅ Equity chart saved to CL_F_daily_equity.html
-✅ Chart saved to CL_F_daily_clean.html
+✅ Backtest Results for USD_JPY_daily:
+   Return: -86.76%
+   Max Drawdown: -96.64%
+   Win Rate: 33.33%
+   # Trades: 87
+   Exposure Time: 22.02%
+✅ Equity chart saved to USD_JPY_daily_equity.html
+✅ Chart saved to USD_JPY_daily_clean.html
 
 ======================================================================
-Running Ichimoku Backtest: NG_F_daily
+Running Ichimoku Backtest: USD_JPY_daily
 ======================================================================
-📊 Fetching NG_F_daily from database...
-   Loaded 1259 rows
+📊 Fetching USD_JPY_daily from database...
+   Loaded 5000 rows
 📈 Adding Ichimoku Cloud indicators...
 📈 Adding EMA trend filter (length=100)...
 📊 Creating Ichimoku + EMA signals...
-   1208 rows after dropping NaN
-🎯 Running backtest with 1208 candles...
-Backtest.run:   0%|          | 0/1207 [00:00<?, ?bar/s]                                                       /home/codespace/.local/lib/python3.12/site-packages/backtesting/_stats.py:156: RuntimeWarning:
+   4949 rows after dropping NaN
+🎯 Running backtest with 4949 candles...
+Backtest.run:   0%|          | 0/4948 [00:00<?, ?bar/s]                                                       /workspaces/AVV/ichimoku_backtest.py:106: UserWarning:
 
-divide by zero encountered in log
+Some trades remain open at the end of backtest. Use `Backtest(..., finalize_trades=True)` to close them and include them in stats.
 
-127.0.0.1 - - [06/Dec/2025 19:34:55] "GET /pair/NG_F_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:28:29] "GET /pair/USD_JPY_daily?strategy=simple HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:28:30] "GET /chart/USD_JPY_daily_ichimoku.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:28:30] "GET /chart/USD_JPY_daily_clean.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:28:30] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:28:41] "GET /pair/USD_JPY_daily?strategy=ob_refined HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:28:42] "GET /chart/USD_JPY_daily_clean.html HTTP/1.1" 200 -
+ * Detected change in '/workspaces/AVV/backtest_runner.py', reloading
 
-✅ Backtest Results for NG_F_daily:
-   Return: -100.00%
-   Max Drawdown: -100.00%
-   Win Rate: 66.67%
-   # Trades: 3
-   Exposure Time: 4.97%
-✅ Equity chart saved to NG_F_daily_equity.html
-✅ Chart saved to NG_F_daily_clean.html
-
-======================================================================
-Running Ichimoku Backtest: HG_F_daily
-======================================================================
-📊 Fetching HG_F_daily from database...
-   Loaded 1259 rows
-📈 Adding Ichimoku Cloud indicators...
-📈 Adding EMA trend filter (length=100)...
-📊 Creating Ichimoku + EMA signals...
-   1208 rows after dropping NaN
-🎯 Running backtest with 1208 candles...
-Backtest.run:   0%|          | 0/1207 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [06/Dec/2025 19:34:55] "GET /pair/HG_F_daily HTTP/1.1" 200 -
-
-✅ Backtest Results for HG_F_daily:
-   Return: -85.39%
-   Max Drawdown: -88.68%
-   Win Rate: 31.25%
-   # Trades: 16
-   Exposure Time: 10.51%
-✅ Equity chart saved to HG_F_daily_equity.html
-✅ Chart saved to HG_F_daily_clean.html
-
-======================================================================
-Running Ichimoku Backtest: SI_F_daily
-======================================================================
-📊 Fetching SI_F_daily from database...
-   Loaded 1258 rows
-📈 Adding Ichimoku Cloud indicators...
-📈 Adding EMA trend filter (length=100)...
-📊 Creating Ichimoku + EMA signals...
-   1207 rows after dropping NaN
-🎯 Running backtest with 1207 candles...
-Backtest.run:   0%|          | 0/1206 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [06/Dec/2025 19:34:55] "GET /pair/SI_F_daily HTTP/1.1" 200 -
-127.0.0.1 - - [06/Dec/2025 19:35:15] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [06/Dec/2025 19:35:16] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [06/Dec/2025 19:35:17] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [06/Dec/2025 19:35:17] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [06/Dec/2025 19:35:17] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [06/Dec/2025 19:35:17] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [06/Dec/2025 19:35:17] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [06/Dec/2025 19:35:17] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
-
-✅ Backtest Results for SI_F_daily:
-   Return: -80.28%
-   Max Drawdown: -94.80%
-   Win Rate: 35.29%
-   # Trades: 17
-   Exposure Time: 11.10%
-✅ Equity chart saved to SI_F_daily_equity.html
-✅ Chart saved to SI_F_daily_clean.html
-
-======================================================================
-Running Ichimoku Backtest: GC_F_daily
-======================================================================
-📊 Fetching GC_F_daily from database...
-   Loaded 1258 rows
-📈 Adding Ichimoku Cloud indicators...
-📈 Adding EMA trend filter (length=100)...
-📊 Creating Ichimoku + EMA signals...
-   1207 rows after dropping NaN
-🎯 Running backtest with 1207 candles...
-Backtest.run:   0%|          | 0/1206 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [06/Dec/2025 19:35:23] "GET /pair/GC_F_daily HTTP/1.1" 200 -
-127.0.0.1 - - [06/Dec/2025 19:35:26] "GET /chart/GC_F_daily_clean.html HTTP/1.1" 200 -
-127.0.0.1 - - [06/Dec/2025 19:35:26] "GET /chart/GC_F_daily_ichimoku.html HTTP/1.1" 200 -
-127.0.0.1 - - [06/Dec/2025 19:35:26] "GET /chart/GC_F_daily_equity.html HTTP/1.1" 200 -
-127.0.0.1 - - [06/Dec/2025 19:35:59] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [06/Dec/2025 19:35:59] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [06/Dec/2025 19:35:59] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [06/Dec/2025 19:35:59] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [06/Dec/2025 19:35:59] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [06/Dec/2025 19:35:59] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [06/Dec/2025 19:35:59] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [06/Dec/2025 19:36:01] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
-
-✅ Backtest Results for GC_F_daily:
-   Return: -49.71%
-   Max Drawdown: -66.15%
-   Win Rate: 36.36%
-   # Trades: 11
-   Exposure Time: 6.46%
-✅ Equity chart saved to GC_F_daily_equity.html
-✅ Chart saved to GC_F_daily_clean.html
-
-======================================================================
-Running Ichimoku Backtest: NG_F_daily
-======================================================================
-📊 Fetching NG_F_daily from database...
-   Loaded 1259 rows
-📈 Adding Ichimoku Cloud indicators...
-📈 Adding EMA trend filter (length=100)...
-📊 Creating Ichimoku + EMA signals...
-   1208 rows after dropping NaN
-🎯 Running backtest with 1208 candles...
-Backtest.run:   0%|          | 0/1207 [00:00<?, ?bar/s]                                                       /home/codespace/.local/lib/python3.12/site-packages/backtesting/_stats.py:156: RuntimeWarning:
-
-divide by zero encountered in log
-
-127.0.0.1 - - [06/Dec/2025 19:36:22] "GET /pair/NG_F_daily HTTP/1.1" 200 -
-127.0.0.1 - - [06/Dec/2025 19:36:23] "GET /chart/NG_F_daily_equity.html HTTP/1.1" 200 -
-127.0.0.1 - - [06/Dec/2025 19:36:23] "GET /chart/NG_F_daily_ichimoku.html HTTP/1.1" 200 -
-127.0.0.1 - - [06/Dec/2025 19:36:23] "GET /chart/NG_F_daily_clean.html HTTP/1.1" 200 -
-127.0.0.1 - - [06/Dec/2025 19:36:50] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [06/Dec/2025 19:36:50] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [06/Dec/2025 19:36:50] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [06/Dec/2025 19:36:50] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [06/Dec/2025 19:36:50] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [06/Dec/2025 19:36:50] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [06/Dec/2025 19:36:50] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [06/Dec/2025 19:36:50] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
- * Detected change in '/workspaces/AVV/scripts/fix_commodities_index.py', reloading
-
-✅ Backtest Results for NG_F_daily:
-   Return: -100.00%
-   Max Drawdown: -100.00%
-   Win Rate: 66.67%
-   # Trades: 3
-   Exposure Time: 4.97%
-✅ Equity chart saved to NG_F_daily_equity.html
-✅ Chart saved to NG_F_daily_clean.html
+✅ Backtest Results for USD_JPY_daily:
+   Return: -99.58%
+   Max Drawdown: -99.92%
+   Win Rate: 36.86%
+   # Trades: 312
+   Exposure Time: 83.11%
+✅ Equity chart saved to USD_JPY_daily_equity.html
+✅ Chart saved to USD_JPY_daily_clean.html
+OB equity chart error: cannot access local variable 'pair_display' where it is not associated with a value
+✅ Chart saved to USD_JPY_daily_clean.html
+Ichimoku chart error: 'Missing required column: signal'
  * Restarting with stat
  * Debugger is active!
- * Debugger PIN: 307-934-822
+ * Debugger PIN: 766-405-245
+ * Detected change in '/workspaces/AVV/web_ui.py', reloading
+Starting web server on http://127.0.0.1:5000
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 766-405-245
+ * Detected change in '/workspaces/AVV/web_ui.py', reloading
+Starting web server on http://127.0.0.1:5000
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 766-405-245
+ * Detected change in '/workspaces/AVV/strategy.py', reloading
+Starting web server on http://127.0.0.1:5000
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 766-405-245
+ * Detected change in '/workspaces/AVV/ichimoku.py', reloading
+Starting web server on http://127.0.0.1:5000
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 766-405-245
+ * Detected change in '/workspaces/AVV/ichimoku.py', reloading
+Starting web server on http://127.0.0.1:5000
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 766-405-245
+127.0.0.1 - - [07/Dec/2025 07:36:52] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:36:54] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:36:54] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:36:54] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:36:54] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:36:54] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:36:54] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:36:54] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
+Starting web server on http://127.0.0.1:5000
+
+======================================================================
+Running Ichimoku Backtest: EUR_USD_daily
+======================================================================
+📊 Fetching EUR_USD_daily from database...
+   Loaded 5000 rows
+📈 Adding Ichimoku Cloud indicators...
+📈 Adding EMA trend filter (length=100)...
+📊 Creating Ichimoku + EMA signals...
+   4949 rows after dropping NaN
+🎯 Running backtest with 4949 candles...
+Backtest.run:   0%|          | 0/4948 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [07/Dec/2025 07:37:04] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:37:05] "GET /chart/EUR_USD_daily_ichimoku.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:37:05] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:37:05] "GET /chart/EUR_USD_daily_clean.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:37:19] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:37:20] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:37:20] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:37:20] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:37:20] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:37:20] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:37:20] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:37:20] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:37:29] "GET /build_status HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:37:33] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:37:33] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:37:33] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:37:33] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:37:33] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:37:33] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:37:33] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:37:33] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:37:54] "GET /build_status HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:38:03] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 07:38:03] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:38:03] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:38:03] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:38:03] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:38:03] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:38:03] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 07:38:03] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
