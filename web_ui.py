@@ -56,6 +56,75 @@ except Exception:
     _rq_available = False
 
 
+# Load pair lists from `pairs.json` if present (keeps parity with OB UI)
+def _load_pairs_from_json(path='pairs.json'):
+    try:
+        import json
+        with open(path, 'r') as f:
+            data = json.load(f)
+        forex = data.get('FOREX_PAIRS', [])
+        stocks = data.get('STOCK_PAIRS', [])
+        commodities = data.get('COMMODITY_PAIRS', [])
+        return forex, stocks, commodities
+    except Exception:
+        return [], [], []
+
+FOREX_PAIRS, STOCK_PAIRS, COMMODITY_PAIRS = _load_pairs_from_json()
+ALL_PAIRS = FOREX_PAIRS + STOCK_PAIRS + COMMODITY_PAIRS
+
+
+def _list_sqlite_tables(sqlite_uri):
+    try:
+        import sqlite3
+        path = sqlite_uri.replace('sqlite:///', '') if sqlite_uri.startswith('sqlite:///') else sqlite_uri
+        if not os.path.exists(path):
+            return []
+        conn = sqlite3.connect(path)
+        cur = conn.cursor()
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = [r[0] for r in cur.fetchall()]
+        conn.close()
+        return tables
+    except Exception:
+        return []
+
+
+@APP.route('/health')
+def health():
+    try:
+        cache_info = None
+        if os.path.exists(CACHE_FILE):
+            st = os.stat(CACHE_FILE)
+            cache_info = {
+                'path': CACHE_FILE,
+                'exists': True,
+                'mtime': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(st.st_mtime)),
+                'size_bytes': st.st_size,
+            }
+        else:
+            cache_info = {'path': CACHE_FILE, 'exists': False}
+
+        from config import DATABASE_PATH, STOCKS_DB_PATH, COMMODITIES_DB_PATH
+        dbs = {
+            'forex': _list_sqlite_tables(DATABASE_PATH),
+            'stocks': _list_sqlite_tables(STOCKS_DB_PATH),
+            'commodities': _list_sqlite_tables(COMMODITIES_DB_PATH),
+        }
+
+        return {
+            'cache': cache_info,
+            'pairs': {
+                'FOREX_PAIRS': FOREX_PAIRS,
+                'STOCK_PAIRS': STOCK_PAIRS,
+                'COMMODITY_PAIRS': COMMODITY_PAIRS,
+                'ALL_PAIRS': ALL_PAIRS,
+            },
+            'databases': dbs,
+        }
+    except Exception as e:
+        return {'error': str(e)}, 500
+
+
 def get_base_css():
     """Return base CSS styling for all pages."""
     return """

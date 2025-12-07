@@ -43,6 +43,143 @@ APP = Flask(__name__, static_folder=".", static_url_path="/static")
 OB_CACHE_FILE = "ob_backtest_summary.csv"
 CHART_EXT = ".html"
 
+
+def _list_sqlite_tables(sqlite_uri):
+    """Return a list of table names for a sqlite:/// URI or file path."""
+    try:
+        import sqlite3
+        path = sqlite_uri.replace('sqlite:///', '') if sqlite_uri.startswith('sqlite:///') else sqlite_uri
+        if not os.path.exists(path):
+            return []
+        conn = sqlite3.connect(path)
+        cur = conn.cursor()
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = [r[0] for r in cur.fetchall()]
+        conn.close()
+        return tables
+    except Exception:
+        return []
+
+
+@APP.route('/health')
+def health():
+    """Health endpoint: returns cache file metadata and DB table lists."""
+    try:
+        cache_info = None
+        if os.path.exists(OB_CACHE_FILE):
+            st = os.stat(OB_CACHE_FILE)
+            cache_info = {
+                'path': OB_CACHE_FILE,
+                'exists': True,
+                'mtime': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(st.st_mtime)),
+                'size_bytes': st.st_size,
+            }
+        else:
+            cache_info = {'path': OB_CACHE_FILE, 'exists': False}
+
+        from config import DATABASE_PATH, STOCKS_DB_PATH, COMMODITIES_DB_PATH
+        dbs = {
+            'forex': _list_sqlite_tables(DATABASE_PATH),
+            'stocks': _list_sqlite_tables(STOCKS_DB_PATH),
+            'commodities': _list_sqlite_tables(COMMODITIES_DB_PATH),
+        }
+
+        return {
+            'cache': cache_info,
+            'pairs': {
+                'FOREX_PAIRS': FOREX_PAIRS,
+                'STOCK_PAIRS': STOCK_PAIRS,
+                'COMMODITY_PAIRS': COMMODITY_PAIRS,
+                'ALL_PAIRS': ALL_PAIRS,
+            },
+            'databases': dbs,
+        }
+    except Exception as e:
+        return {'error': str(e)}, 500
+
+
+@APP.route('/admin/pairs', methods=['GET', 'POST'])
+def admin_pairs():
+    """Admin UI to view/edit `pairs.json` and trigger a rebuild.
+
+    - GET: show an editable textarea with the current pairs.json content.
+    - POST: validate & save JSON, start an async build for OB cache, and
+      call the Ichimoku UI `/rebuild_async` endpoint to keep both caches in sync.
+    """
+    try:
+        import json
+        from urllib import request as urlrequest
+        pairs_path = os.path.join(os.getcwd(), 'pairs.json')
+
+        if request.method == 'POST':
+            body = request.form.get('pairs_json', '')
+            try:
+                parsed = json.loads(body)
+            except Exception as e:
+                return f"Invalid JSON: {e}", 400
+
+            # Basic validation: must contain keys
+            for k in ('FOREX_PAIRS', 'STOCK_PAIRS', 'COMMODITY_PAIRS'):
+                if k not in parsed:
+                    return f"Missing key: {k}", 400
+
+            # Write file
+            with open(pairs_path, 'w') as fh:
+                json.dump(parsed, fh, indent=2)
+
+            # Start OB build in background thread
+            def _start_build():
+                try:
+                    build_summary(OB_CACHE_FILE)
+                except Exception:
+                    pass
+
+            t = threading.Thread(target=_start_build, daemon=True)
+            t.start()
+
+            # Trigger ichimoku UI rebuild (best-effort)
+            try:
+                url = 'http://127.0.0.1:5000/rebuild_async'
+                req = urlrequest.Request(url, method='GET')
+                urlrequest.urlopen(req, timeout=2)
+            except Exception:
+                # It's okay if the other UI isn't running or the call fails
+                pass
+
+            return redirect('/admin/pairs')
+
+        # GET: load and display
+        if os.path.exists(pairs_path):
+            with open(pairs_path, 'r') as fh:
+                content = fh.read()
+        else:
+            # build a default preview
+            default = {
+                'FOREX_PAIRS': DEFAULT_FOREX_PAIRS,
+                'STOCK_PAIRS': DEFAULT_STOCK_PAIRS,
+                'COMMODITY_PAIRS': DEFAULT_COMMODITY_PAIRS,
+            }
+            content = json.dumps(default, indent=2)
+
+        html = get_base_css()
+        html += """
+        <div class="container">
+            <header>
+                <h1>🔧 Admin — Edit pairs.json</h1>
+            </header>
+            <form method="post">
+                <p>Edit the JSON below to add/remove pairs. Keys required: <code>FOREX_PAIRS</code>, <code>STOCK_PAIRS</code>, <code>COMMODITY_PAIRS</code>.</p>
+                <textarea name="pairs_json" style="width:100%;height:360px;font-family:monospace;">""" + content + """</textarea>
+                <div style="margin-top:12px"><button class="btn" type="submit">💾 Save & Rebuild</button> <a class="btn secondary" href="/">Back</a></div>
+            </form>
+            <p style="margin-top:16px;font-size:0.9em;color:#666">Note: this UI is unauthenticated and intended for local usage only.</p>
+        </div>
+        """
+        return html
+
+    except Exception as e:
+        return f"Admin error: {e}", 500
+
 # Background build state
 _build_lock = threading.Lock()
 _build_thread = None

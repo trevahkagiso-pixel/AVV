@@ -8,19 +8,20 @@ Press CTRL+C to quit
  * Restarting with stat
  * Debugger is active!
  * Debugger PIN: 135-549-702
-127.0.0.1 - - [07/Dec/2025 13:05:26] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 13:12:11] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 13:12:27] "GET /chart/EUR_USD_daily_ob_trades.html HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 13:12:27] "GET /chart/EUR_USD_daily_ob_clean.html HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 13:12:27] "GET /chart/EUR_USD_daily_ob_equity.html HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 13:12:42] "GET /chart/EUR_USD_daily_ob_trades.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:18:46] "GET /health HTTP/1.1" 200 -
  * Detected change in '/workspaces/AVV/web_ui.py', reloading
 🔷 Starting OB UI server on http://127.0.0.1:5001
  * Restarting with stat
  * Debugger is active!
  * Debugger PIN: 135-549-702
+127.0.0.1 - - [07/Dec/2025 13:30:32] "GET / HTTP/1.1" 200 -
  * Detected change in '/workspaces/AVV/ob_ui.py', reloading
 🔷 Starting OB UI server on http://127.0.0.1:5001
  * Restarting with stat
  * Debugger is active!
  * Debugger PIN: 135-549-702
+127.0.0.1 - - [07/Dec/2025 13:37:57] "GET /admin/pairs HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 13:38:08] "GET /admin/pairs HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 13:38:50] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 13:39:54] "GET /pair/GC_F_daily HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 13:41:09] "GET / HTTP/1.1" 200 -

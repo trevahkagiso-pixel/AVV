@@ -8,21 +8,47 @@ Press CTRL+C to quit
  * Restarting with stat
  * Debugger is active!
  * Debugger PIN: 135-549-702
-127.0.0.1 - - [07/Dec/2025 13:05:21] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [07/Dec/2025 13:05:22] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [07/Dec/2025 13:05:23] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [07/Dec/2025 13:05:23] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [07/Dec/2025 13:05:23] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [07/Dec/2025 13:05:23] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [07/Dec/2025 13:05:23] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
-127.0.0.1 - - [07/Dec/2025 13:05:23] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
- * Detected change in '/workspaces/AVV/web_ui.py', reloading
-Starting web server on http://127.0.0.1:5000
- * Restarting with stat
- * Debugger is active!
- * Debugger PIN: 135-549-702
+127.0.0.1 - - [07/Dec/2025 13:27:25] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 13:30:13] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 13:30:16] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:30:16] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:30:16] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:30:16] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:30:16] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:30:16] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:30:16] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
  * Detected change in '/workspaces/AVV/ob_ui.py', reloading
 Starting web server on http://127.0.0.1:5000
  * Restarting with stat
  * Debugger is active!
  * Debugger PIN: 135-549-702
+127.0.0.1 - - [07/Dec/2025 13:38:54] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 13:38:55] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:38:56] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:38:56] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:38:56] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:38:57] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:38:57] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:38:57] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:39:18] "GET /build_status HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 13:39:24] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2025 13:39:25] "GET /chart/USD_JPY_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:39:25] "GET /chart/GBP_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:39:25] "GET /chart/MSFT_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:39:25] "GET /chart/AUD_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:39:25] "GET /chart/AAPL_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:39:25] "GET /chart/EUR_USD_daily_equity.html HTTP/1.1" 304 -
+127.0.0.1 - - [07/Dec/2025 13:39:26] "GET /chart/USD_CAD_daily_equity.html HTTP/1.1" 304 -
+Starting web server on http://127.0.0.1:5000
+
+======================================================================
+Running Ichimoku Backtest: EUR_USD_daily
+======================================================================
+📊 Fetching EUR_USD_daily from database...
+   Loaded 5000 rows
+📈 Adding Ichimoku Cloud indicators...
+📈 Adding EMA trend filter (length=100)...
+📊 Creating Ichimoku + EMA signals...
+   4949 rows after dropping NaN
+🎯 Running backtest with 4949 candles...
+Backtest.run:   0%|          | 0/4948 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [07/Dec/2025 13:39:31] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
