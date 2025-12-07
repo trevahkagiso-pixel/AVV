@@ -52,3 +52,16 @@ Running Ichimoku Backtest: EUR_USD_daily
    4949 rows after dropping NaN
 🎯 Running backtest with 4949 candles...
 Backtest.run:   0%|          | 0/4948 [00:00<?, ?bar/s]                                                       127.0.0.1 - - [07/Dec/2025 13:39:31] "GET /pair/EUR_USD_daily HTTP/1.1" 200 -
+ * Detected change in '/workspaces/AVV/web_ui.py', reloading
+
+✅ Backtest Results for EUR_USD_daily:
+   Return: -73.32%
+   Max Drawdown: -87.11%
+   Win Rate: 35.53%
+   # Trades: 76
+   Exposure Time: 20.11%
+✅ Equity chart saved to EUR_USD_daily_equity.html
+✅ Chart saved to EUR_USD_daily_clean.html
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 135-549-702
