@@ -1661,6 +1661,51 @@ def index():
     return html
 
 
+@APP.route("/bokeh/<pair>")
+def bokeh_chart(pair):
+    """Serve Bokeh candlestick chart for a pair (async endpoint) with simple caching.
+    
+    This allows the pair detail page to load quickly and fetch the chart separately.
+    Cached HTML is stored under `bokeh_cache/<pair>.html` for `BOKEH_CACHE_TTL` seconds.
+    """
+    try:
+        cache_dir = os.path.join(os.getcwd(), 'bokeh_cache')
+        os.makedirs(cache_dir, exist_ok=True)
+        cache_file = os.path.join(cache_dir, f"{pair}.html")
+        ttl = int(os.environ.get('BOKEH_CACHE_TTL', '300'))
+        # Serve cached version if fresh
+        try:
+            if os.path.exists(cache_file):
+                mtime = os.path.getmtime(cache_file)
+                if (time.time() - mtime) < ttl:
+                    with open(cache_file, 'r', encoding='utf-8') as f:
+                        return f.read(), 200, {"Content-Type": "text/html; charset=utf-8"}
+        except Exception:
+            pass
+
+        result = run_ob_backtest_for_pair(pair)
+        if "error" in result:
+            return jsonify({"error": result["error"]}), 400
+        
+        trades = result.get("trades", pd.DataFrame())
+        df = result.get("df", pd.DataFrame())
+        
+        if df.empty or trades.empty:
+            return jsonify({"error": f"No data for {pair}"}), 404
+        
+        bokeh_html = plot_bokeh_candlestick(df, trades, pair)
+        # Save cache (best-effort)
+        try:
+            with open(cache_file, 'w', encoding='utf-8') as f:
+                f.write(bokeh_html)
+        except Exception:
+            pass
+        
+        return bokeh_html, 200, {"Content-Type": "text/html; charset=utf-8"}
+    except Exception as e:
+        return jsonify({"error": f"Bokeh error: {str(e)}"}), 500
+
+
 @APP.route("/pair/<pair>")
 def pair_detail(pair):
     """Detailed analysis for a single pair."""
@@ -1840,7 +1885,7 @@ def pair_detail(pair):
             # Create Bokeh candlestick chart
             bokeh_html = ""
             try:
-                bokeh_html = plot_bokeh_candlestick(df, trades, pair)
+                 bokeh_html = plot_bokeh_candlestick(df, trades, pair_name)
             except Exception as e:
                 bokeh_html = f"<div style='padding:20px;color:red;'><strong>Bokeh Error:</strong> {str(e)}</div>"
 
@@ -1891,7 +1936,7 @@ def pair_detail(pair):
             <div class="tab-content" id="tab-bokeh" style="display:none">
             <h2>Interactive Candlestick Chart</h2>
             <p style="margin:12px 0;font-size:0.9em;color:#999;">Hover over candles to view OHLC data. Pan, zoom, and toggle entry/exit markers using the toolbar.</p>
-            {bokeh_html}
+            <div id="bokeh-container" data-pair="{pair}">Interactive chart not loaded. <button id="load-bokeh-btn">Load Chart</button></div>
             </div>
             <div class="tab-content" id="tab-analysis" style="display:none">
             """
@@ -1941,6 +1986,14 @@ def pair_detail(pair):
                         console.warn('Failed to lazy-load iframe', e);
                     }
                 });
+                // If this is the bokeh tab, trigger async load of the Bokeh chart
+                if (tabId === 'tab-bokeh') {
+                    try {
+                        loadBokeh();
+                    } catch (e) {
+                        console.warn('Failed to load Bokeh chart', e);
+                    }
+                }
             }
             // mark button active
             if (btn) btn.classList.add('active');
@@ -1959,6 +2012,36 @@ def pair_detail(pair):
             } else {
                 showTab('tab-summary', document.querySelector('.tab-btn'));
             }
+        });
+
+        // Function to load Bokeh chart asynchronously
+        function loadBokeh() {
+            const container = document.getElementById('bokeh-container');
+            if (!container) return;
+            if (container.getAttribute('data-loaded') === '1') return;
+            container.innerHTML = 'Loading interactive chart...';
+            const pairName = container.getAttribute('data-pair');
+            fetch('/bokeh/' + encodeURIComponent(pairName))
+                .then(r => {
+                    if (!r.ok) throw new Error('Network response was not ok');
+                    return r.text();
+                })
+                .then(html => {
+                    container.innerHTML = html;
+                    container.setAttribute('data-loaded', '1');
+                })
+                .catch(async err => {
+                    console.error('Error fetching Bokeh chart', err);
+                    let msg = 'Failed to load interactive chart.';
+                    try { msg = await (err.text ? err.text() : Promise.resolve(err.message)); } catch (e) {}
+                    container.innerHTML = `<div class="error">${msg}</div>`;
+                });
+        }
+
+        // Attach click handler to manual load button if present
+        document.addEventListener('DOMContentLoaded', function() {
+            const btn = document.getElementById('load-bokeh-btn');
+            if (btn) btn.addEventListener('click', () => loadBokeh());
         });
 
         function toggleCollapsible(button) {
